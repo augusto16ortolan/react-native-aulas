@@ -38,7 +38,39 @@ No terminal, execute:
 npx create-expo-app@latest meu-primeiro-app
 ```
 
-Se a ferramenta abrir um seletor de template, escolha uma opção em **JavaScript**. Se existir uma versão “blank” ou “default” em JavaScript, ela é suficiente para o curso.
+Ao executar esse comando, o `create-expo-app` pode abrir um seletor de versão do SDK. Para as nossas aulas, a orientação é:
+
+* escolher **For learning with Expo Go (SDK 54)**;
+* manter o projeto em **JavaScript**;
+* usar o template padrão, a menos que a atividade peça outro.
+
+Isso é importante porque o **Expo Go** usado pela turma trabalha melhor nesse fluxo de aprendizado com **SDK 54**, reduzindo problemas de compatibilidade no começo do curso.
+
+Depois da seleção, a ferramenta costuma seguir com uma mensagem parecida com:
+
+```text
+✔ Select an Expo SDK version: › For learning with Expo Go (SDK 54)
+Creating meu-primeiro-app using the default template.
+```
+
+## E se eu quiser escolher um template?
+
+Além do fluxo padrão, também é possível escolher explicitamente um template.
+
+Exemplo:
+
+```bash
+npx create-expo-app@latest meu-primeiro-app --template blank
+```
+
+Esse formato é útil quando você quer começar com uma estrutura mais enxuta.
+
+De forma prática para a disciplina:
+
+* **fluxo principal da turma**: `npx create-expo-app@latest meu-primeiro-app`
+* **seleção recomendada**: `SDK 54`
+* **template padrão**: suficiente para a maioria das aulas
+* **template `blank`**: opcional quando quisermos um projeto mais limpo
 
 Depois entre na pasta do projeto:
 

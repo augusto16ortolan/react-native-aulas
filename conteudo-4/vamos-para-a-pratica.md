@@ -10,6 +10,13 @@ description: >-
 
 Com o projeto criado e rodando, o próximo passo é entender o arquivo inicial do aplicativo.
 
+Antes de seguir, vale reforçar o padrão da disciplina:
+
+* criar o projeto com `npx create-expo-app@latest`;
+* escolher **SDK 54** no seletor, pensando no uso com **Expo Go**;
+* manter o projeto em **JavaScript**;
+* usar o template padrão ou, quando o professor pedir, o `blank`.
+
 ## Documentações importantes
 
 Durante o curso, estas duas documentações serão referências frequentes:
