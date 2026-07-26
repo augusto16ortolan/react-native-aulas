@@ -1,24 +1,23 @@
 ---
 description: >-
-  Aprenda a utilizar elementos essenciais para construir a interface e a
-  funcionalidade do seu aplicativo.
+  Aprenda a utilizar componentes essenciais do React Native para montar a
+  interface dos seus aplicativos.
 ---
 
 # Componentes básicos do React Native
 
 <figure><img src="../.gitbook/assets/image (23).png" alt=""><figcaption></figcaption></figure>
 
-Para começar a desenvolver com React Native, é essencial entender os componentes básicos que formam a estrutura de qualquer aplicativo. Estes componentes são os blocos de construção fundamentais que você usará para criar interfaces de usuário interativas e funcionais. Neste material, vamos explorar alguns dos componentes mais importantes do React Native, explicando seu uso e fornecendo exemplos práticos para ajudá-lo a começar.
+Os componentes básicos do React Native são os blocos que usamos para montar telas, capturar dados do usuário, renderizar listas e exibir feedback visual.
 
-## Guia dos componentes básicos do React Native
+Mais importante do que decorar todos os componentes é entender **quando** cada um deve ser usado.
 
-### View ([https://reactnative.dev/docs/view](https://reactnative.dev/docs/view))
+## `View`
 
-O componente `View` é como uma "caixa" ou "contêiner" que pode conter outros componentes e organizá-los na tela.
+`View` é o contêiner mais comum do React Native. Ele agrupa elementos e ajuda a organizar o layout.
 
 ```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from "react-native";
 
 export default function App() {
   return (
@@ -31,128 +30,49 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
   },
 });
 ```
 
-### Text ([https://reactnative.dev/docs/text](https://reactnative.dev/docs/text))
+## `Text`
 
-O componente `Text` é usado para exibir texto na tela.
-
-```jsx
-import React from 'react';
-import { Text } from 'react-native';
-
-export default function App() {
-  return (
-    <Text>Este é um texto!</Text>
-  );
-}
-```
-
-### TextInput ([https://reactnative.dev/docs/textinput](https://reactnative.dev/docs/textinput))
-
-O componente `TextInput` cria um campo de texto que captura entradas de texto do usuário.
+`Text` é usado para exibir textos na tela.
 
 ```jsx
-import React, { useState } from 'react';
-import { TextInput } from 'react-native';
-
-export default function App() {
-  const [name, setName] = useState('');
-  
-  return (
-    <TextInput placeholder="Digite seu nome" value={name} onChangeText={text => setName(text)}/>
-    <Text>{name}</Text>
-  );
-}
-```
-
-### Button ([https://reactnative.dev/docs/button](https://reactnative.dev/docs/button))
-
-O componente `Button` cria um botão clicável que pode executar uma ação quando pressionado.
-
-```jsx
-import React from 'react';
-import { Button, Alert, View } from 'react-native';
+import { Text, View } from "react-native";
 
 export default function App() {
   return (
     <View>
-      <Button
-        title="Pressione-me"
-        onPress={() => Alert.alert('Botão pressionado!')}
-      />
+      <Text>Este é um texto!</Text>
     </View>
   );
 }
 ```
 
-### ScrollView ([https://reactnative.dev/docs/scrollview](https://reactnative.dev/docs/scrollview))
+## `TextInput`
 
-O componente `ScrollView` permite que o conteúdo dentro dele seja rolado, útil para listas ou layouts maiores que a tela.
-
-```jsx
-import React from 'react';
-import { ScrollView, Text, StyleSheet } from 'react-native';
-
-export default function App() {
-  return (
-    <ScrollView style={styles.scrollView}>
-      <Text>Item 1</Text>
-      <Text>Item 2</Text>
-      <Text>Item 3</Text>
-      {/* Adicione mais itens conforme necessário */}
-    </ScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
-  scrollView: {
-    marginHorizontal: 20,
-  },
-});
-```
-
-### SafeAreaView ([https://reactnative.dev/docs/safeareaview](https://reactnative.dev/docs/safeareaview))
-
-O componente `SafeAreaView` garante que o conteúdo seja exibido dentro das áreas seguras da tela, evitando a sobreposição com elementos do sistema, como a barra de status em dispositivos com "notch".
+`TextInput` captura texto digitado pelo usuário.
 
 ```jsx
-import React from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import { useState } from "react";
+import { TextInput, Text, View, StyleSheet } from "react-native";
 
 export default function App() {
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <Text>Conteúdo seguro!</Text>
-    </SafeAreaView>
-  );
-}
+  const [name, setName] = useState("");
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
-```
-
-### ActivityIndicator ([https://reactnative.dev/docs/activityindicator](https://reactnative.dev/docs/activityindicator))
-
-O componente `ActivityIndicator` exibe um indicador de carregamento, útil para mostrar que uma operação está em andamento.
-
-```jsx
-import React from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
-
-export default function App() {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu nome"
+        value={name}
+        onChangeText={setName}
+      />
+      <Text>Olá, {name || "visitante"}!</Text>
     </View>
   );
 }
@@ -160,23 +80,135 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    padding: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
   },
 });
 ```
 
-### TouchableOpacity ([https://reactnative.dev/docs/touchableopacity](https://reactnative.dev/docs/touchableopacity))
+## `Button`
 
-O componente `TouchableOpacity` é usado para criar áreas tocáveis que respondem à interação do usuário com uma mudança de opacidade.
+`Button` cria um botão simples com ação de toque.
 
 ```jsx
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { Alert, Button, View } from "react-native";
 
 export default function App() {
   return (
-    <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Área tocada!')}>
+    <View>
+      <Button
+        title="Pressione-me"
+        onPress={() => Alert.alert("Ação", "Botão pressionado!")}
+      />
+    </View>
+  );
+}
+```
+
+Em projetos reais, muitas equipes preferem componentes próprios ou `Pressable`, porque `Button` tem pouca customização visual. Mesmo assim, ele é ótimo para aprender.
+
+## `ScrollView`
+
+`ScrollView` permite rolar conteúdo maior que a área visível da tela.
+
+```jsx
+import { ScrollView, Text, StyleSheet } from "react-native";
+
+export default function App() {
+  return (
+    <ScrollView contentContainerStyle={styles.content}>
+      <Text>Item 1</Text>
+      <Text>Item 2</Text>
+      <Text>Item 3</Text>
+      <Text>Item 4</Text>
+      <Text>Item 5</Text>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: {
+    padding: 20,
+    gap: 12,
+  },
+});
+```
+
+Para poucas informações, `ScrollView` funciona bem. Para listas grandes, prefira `FlatList`.
+
+## `SafeAreaView` e área segura
+
+Historicamente, o React Native trouxe o componente `SafeAreaView`, mas hoje a recomendação mais comum é usar a biblioteca **`react-native-safe-area-context`**.
+
+Exemplo com `SafeAreaView` da biblioteca:
+
+```jsx
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, StyleSheet } from "react-native";
+
+export default function App() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text>Conteúdo dentro da área segura</Text>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+});
+```
+
+## `ActivityIndicator`
+
+`ActivityIndicator` mostra que uma operação está em andamento.
+
+```jsx
+import { ActivityIndicator, View, StyleSheet } from "react-native";
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#1f3c88" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+```
+
+## `TouchableOpacity` e `Pressable`
+
+`TouchableOpacity` ainda aparece em muitos projetos, mas `Pressable` é uma opção mais moderna para várias interações.
+
+Exemplo com `TouchableOpacity`:
+
+```jsx
+import { TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
+
+export default function App() {
+  return (
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() => Alert.alert("Ação", "Área tocada!")}
+    >
       <Text style={styles.buttonText}>Toque aqui</Text>
     </TouchableOpacity>
   );
@@ -184,25 +216,25 @@ export default function App() {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
+    backgroundColor: "#1f3c88",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
+    fontWeight: "600",
   },
 });
 ```
 
-### StyleSheet ([https://reactnative.dev/docs/stylesheet](https://reactnative.dev/docs/stylesheet))
+## `StyleSheet`
 
-O `StyleSheet` é um método do React Native para criar estilos de forma organizada e eficiente.
+`StyleSheet` organiza estilos e deixa o código mais legível.
 
 ```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from "react-native";
 
 export default function App() {
   return (
@@ -215,29 +247,27 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 18,
-    color: '#333',
+    color: "#333",
   },
 });
 ```
 
-### FlatList ([https://reactnative.dev/docs/flatlist](https://reactnative.dev/docs/flatlist))
+## `FlatList`
 
-Utilizado para renderizar grandes listas de dados de maneira eficiente.
+`FlatList` é a opção ideal para renderizar listas maiores com mais performance.
 
 ```jsx
-import React from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View, StyleSheet } from "react-native";
 
 const DATA = [
-  { id: '1', title: 'Item 1' },
-  { id: '2', title: 'Item 2' },
-  { id: '3', title: 'Item 3' },
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
 ];
 
 export default function App() {
@@ -245,30 +275,43 @@ export default function App() {
     <FlatList
       data={DATA}
       keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.list}
       renderItem={({ item }) => (
-        <View>
+        <View style={styles.card}>
           <Text>{item.title}</Text>
         </View>
       )}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  list: {
+    padding: 16,
+    gap: 12,
+  },
+  card: {
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+  },
+});
 ```
 
-### Image ([https://reactnative.dev/docs/image](https://reactnative.dev/docs/image))
+## `Image`
 
-Usado para exibir imagens.
+`Image` exibe imagens locais ou remotas.
 
 ```jsx
-import React from 'react';
-import { Image, View, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet } from "react-native";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+        source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
       />
     </View>
   );
@@ -277,14 +320,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
   },
 });
 ```
 
-Ao dominar esses componentes fundamentais, você estará bem preparado para enfrentar desafios mais avançados no desenvolvimento de aplicativos com React Native, aproveitando ao máximo a flexibilidade e o poder deste framework. Continue explorando, experimentando e construindo suas habilidades, e você verá como esses blocos de construção simples podem se transformar em aplicações completas e profissionais.
+## Conclusão
+
+Esses componentes aparecem o tempo todo em aplicativos reais. Aprender `View`, `Text`, `TextInput`, `FlatList`, `Image` e componentes de toque já permite construir boa parte de uma interface mobile funcional.

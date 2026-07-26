@@ -1,36 +1,38 @@
 ---
 description: >-
-  Como consumir dados com Axios, organizar chamadas assíncronas (incluindo
-  Promise.all) e lidar com erros de forma simples.
+  Como consumir dados com Axios, paralelizar requisições com Promise.all e
+  organizar melhor a carga de dados em tela.
 ---
 
 # APIs no React Native com Axios e Promise.all
 
 <figure><img src="../.gitbook/assets/image (44).png" alt=""><figcaption></figcaption></figure>
 
-#### Por que usar Axios?
+Quando uma tela depende de mais de uma requisição, uma boa estratégia é rodá-las em paralelo.
 
-O **Axios** facilita requisições HTTP e deixa o código mais limpo, principalmente para:
+## Por que usar Axios?
 
-* passar `params` (query string) de forma simples
-* tratar erros com `try/catch`
+Axios ajuda bastante em:
 
-#### O que o `Promise.all` resolve?
+* clareza de leitura;
+* configuração de `baseURL`;
+* envio de `params`;
+* tratamento de resposta.
 
-Quando você precisa de **mais de uma requisição** para montar a tela, o `Promise.all`:
+## O papel do `Promise.all`
 
-* executa as requisições **ao mesmo tempo**
-* só continua quando **todas** terminarem
-* se **uma falhar**, cai no `catch`
+`Promise.all` permite:
 
-No exemplo abaixo, buscamos usuários de **duas nacionalidades** (BR e US) em paralelo e juntamos tudo numa lista.
+* iniciar várias requisições ao mesmo tempo;
+* esperar todas terminarem;
+* seguir o fluxo só quando tudo estiver pronto.
 
-### Praticando...
+Se uma das promises falhar, o `catch` é acionado.
 
-> Instale: `npm i axios`
+## Exemplo
 
 ```jsx
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Alert, Image } from "react-native";
 import axios from "axios";
 
@@ -38,9 +40,8 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    async function fetchUsers() {
       try {
-        // Promise.all: duas requisições em paralelo
         const [brRes, usRes] = await Promise.all([
           axios.get("https://randomuser.me/api/", {
             params: { results: 5, nat: "br" },
@@ -50,14 +51,13 @@ export default function UserList() {
           }),
         ]);
 
-        // Junta as duas listas em uma só
         const merged = [...brRes.data.results, ...usRes.data.results];
         setUsers(merged);
       } catch (error) {
-        console.error("Erro ao buscar os dados", error);
-        Alert.alert("Erro", "Não foi possível carregar os dados.");
+        console.error(error);
+        Alert.alert("Erro", "Não foi possível carregar os usuários.");
       }
-    };
+    }
 
     fetchUsers();
   }, []);
@@ -65,17 +65,12 @@ export default function UserList() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Usuários</Text>
-
       <FlatList
         data={users}
         keyExtractor={(item) => item.login.uuid}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Image
-              source={{ uri: item.picture.thumbnail }}
-              style={styles.avatar}
-            />
-
+            <Image source={{ uri: item.picture.thumbnail }} style={styles.avatar} />
             <View>
               <Text style={styles.name}>
                 {item.name.first} {item.name.last}
@@ -90,21 +85,38 @@ export default function UserList() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  header: { fontSize: 20, marginBottom: 10, fontWeight: "600" },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
   item: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
   },
-  avatar: { width: 40, height: 40, borderRadius: 20 },
-  name: { fontWeight: "600" },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  name: {
+    fontWeight: "600",
+  },
 });
 ```
 
-### Conclusão
+## Quando usar com cuidado
 
-Com esse padrão simples, você já cobre o essencial da integração com API no React Native: **buscar dados com Axios**, **tratar erros**, **renderizar em lista** e usar `Promise.all` para **paralelizar requisições** e deixar a tela mais rápida e organizada.
+`Promise.all` é ótimo quando todas as respostas são obrigatórias. Se você quiser tolerar falhas parciais, pode estudar `Promise.allSettled`.
+
+## Conclusão
+
+Esse padrão ajuda muito na construção de telas que dependem de múltiplas fontes de dados e melhora a organização do fluxo assíncrono.

@@ -1,49 +1,83 @@
 ---
 description: >-
-  Aprenda a preparar e publicar seu aplicativo nas lojas Google Play e App
-  Store, desde a geração do APK até a configuração da conta de desenvolvedor e
-  as diretrizes de cada plataforma.
+  Entenda o que considerar ao preparar a publicação do aplicativo nas lojas
+  Google Play e App Store.
 ---
 
 # Disponibilizando o seu app para o mundo
 
 <figure><img src="../.gitbook/assets/image (4).png" alt="" width="563"><figcaption></figcaption></figure>
 
-## Disponibilizando aplicativos nas lojas Google Play e App Store
+Publicar um aplicativo vai muito além de “gerar um arquivo”. Também envolve conta de desenvolvedor, políticas da loja, revisão e apresentação do produto.
 
-Para lançar um app nas plataformas mais populares, Google Play e App Store, é importante conhecer alguns requisitos técnicos, custos envolvidos e prazos de aprovação que influenciam o planejamento.
+## Google Play e App Store
 
-### Custos de publicação
+As duas lojas mais comuns continuam sendo:
 
-* Google Play Store:
-  * **Taxa de Registro**: Para publicar apps na Google Play Store, é necessário pagar uma taxa única de registro de **$25 USD**. Após o pagamento, você terá acesso vitalício à Google Play Console para gerenciar todos os seus aplicativos.
-  * **Taxas de Receita**: O Google retém uma porcentagem dos lucros gerados pelo app (geralmente 15% a 30% dependendo da faixa de receita anual do desenvolvedor).
-* Apple App Store:
-  * **Taxa de Associação Anual**: A Apple cobra uma taxa anual de **$99 USD** para membros do Apple Developer Program, necessária para distribuir apps na App Store. Organizações que se qualificam como instituições educacionais ou governamentais podem solicitar uma isenção desta taxa.
-  * **Taxas de Receita**: Assim como no Google, a Apple retém uma porcentagem dos ganhos (15% a 30%) dos aplicativos pagos e das assinaturas dentro do app.
+* **Google Play** para Android
+* **App Store** para iPhone e iPad
 
-### Equipamentos necessários
+Cada uma tem seu fluxo, seus custos e suas exigências.
 
-Para desenvolver e lançar aplicativos, é preciso um computador que suporte as ferramentas de desenvolvimento e as plataformas específicas de cada sistema operacional.
+## Custos principais
 
-* Google Play (Android):
-  * **Sistema Operacional**: Um computador com Windows, macOS ou Linux é suficiente para desenvolver e gerar builds Android, tornando-o mais acessível em termos de hardware.
-  * **Ferramentas Necessárias**: Android Studio é o principal software de desenvolvimento e build para Android, além de ser compatível com qualquer sistema operacional.
-* App Store (iOS):
-  * **Sistema Operacional**: Para gerar e publicar aplicativos iOS, é necessário um **Mac** com macOS, pois o Xcode, o ambiente de desenvolvimento exigido pela Apple, está disponível apenas para o sistema da Apple.
-  * **Alternativas para Desenvolvedores sem Mac**: Para aqueles sem um Mac, é possível usar serviços de build na nuvem, como o EAS Build do Expo ou o MacStadium, mas o custo de assinatura ou contratação de um serviço externo deve ser considerado.
+### Google Play
 
-### Tempo de aprovação das lojas
+Na documentação oficial atual da Google Play, a taxa de registro continua sendo **US$ 25 pagos uma única vez** para criar a conta de desenvolvedor.
 
-O tempo de aprovação varia entre as duas plataformas e depende do rigor de cada uma em relação às políticas de publicação e à análise de segurança.
+### Apple App Store
 
-* Google Play Store:
-  * **Tempo de Aprovação**: O Google possui um processo de revisão automatizado e humano, e o tempo de aprovação pode variar de algumas horas até 7 dias, dependendo da complexidade do app e da conta do desenvolvedor.
-  * **Restrições e Políticas**: A Google Play é relativamente mais flexível na aprovação inicial, mas rigorosa com atualizações e violações de políticas após o lançamento.
-* Apple App Store:
-  * **Tempo de Aprovação**: A Apple é mais rigorosa com os requisitos de qualidade e políticas de segurança, e o tempo médio de aprovação pode variar de 1 a 3 dias. Para novos desenvolvedores, esse período pode se estender um pouco mais.
-  * **Restrições e Políticas**: A App Store possui regras bastante rígidas quanto a design, conteúdo e desempenho do app, então pode haver um ciclo de revisões e ajustes antes da aprovação final.
+Para publicar na App Store, normalmente é necessária uma assinatura do **Apple Developer Program**, com custo anual de **US$ 99**.
 
-### Conclusão
+## Requisitos técnicos
 
-Disponibilizar um app para o mundo envolve mais do que apenas desenvolvimento; é essencial estar ciente dos requisitos técnicos, custos e prazos específicos de cada plataforma. A Google Play Store e a Apple App Store têm suas particularidades, tanto em termos de investimento quanto de processos, que podem impactar o lançamento e o sucesso do aplicativo. Ao entender as diferenças entre as duas lojas, seus custos e requisitos de aprovação, você estará mais preparado para lançar seu app e alcançar seu público-alvo com confiança e eficiência.
+### Android
+
+Para Android, você pode desenvolver e publicar usando diferentes sistemas operacionais. Com Expo e EAS, o fluxo de build fica mais simples.
+
+### iOS
+
+Para publicação iOS, continua sendo necessário lidar com o ecossistema Apple, incluindo conta de desenvolvedor e exigências específicas da plataforma.
+
+## Atenção às políticas atuais
+
+Em 2026, publicar na Google Play envolve mais cuidado com:
+
+* verificação da conta;
+* exigências de identidade do desenvolvedor;
+* políticas de privacidade;
+* regras de teste para determinados tipos de conta;
+* conformidade com dados e segurança.
+
+Na Apple, a revisão segue sendo mais rigorosa em temas como:
+
+* qualidade da interface;
+* comportamento do app;
+* clareza das permissões;
+* uso de recursos pagos e autenticação.
+
+## O que preparar antes da publicação
+
+Antes de enviar o app para uma loja, organize:
+
+* nome do aplicativo;
+* ícone;
+* capturas de tela;
+* descrição;
+* categoria;
+* política de privacidade, quando necessária;
+* email ou canal de suporte;
+* build final apropriado.
+
+## Tempo de aprovação
+
+O tempo varia conforme a plataforma, o tipo de conta e o risco percebido na revisão.
+
+De forma prática:
+
+* Google Play pode aprovar rápido, mas também pode exigir revisões adicionais;
+* App Store costuma ter revisão mais criteriosa.
+
+## Conclusão
+
+Disponibilizar um app para o mundo é um passo técnico e também estratégico. Além do build, é preciso tratar conta de desenvolvedor, regras da loja, apresentação do produto e conformidade com as políticas atuais.

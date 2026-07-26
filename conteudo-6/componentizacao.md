@@ -1,114 +1,142 @@
 ---
 description: >-
-  Descubra como dividir seu aplicativo em componentes reutilizáveis e
-  independentes no React Native.
+  Descubra como dividir seu aplicativo em componentes reutilizáveis e bem
+  organizados no React Native.
 ---
 
 # Componentização
 
 <figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
-Componentização é um conceito fundamental no React Native que ajuda a organizar e estruturar seu código de forma eficiente. Em vez de escrever grandes blocos de código para a interface do usuário, você divide a aplicação em partes menores chamadas **componentes**. Cada componente é responsável por uma parte específica da interface e pode ser reutilizado em diferentes partes do aplicativo.
+Componentizar significa quebrar a interface em partes menores, reutilizáveis e com responsabilidade clara.
 
-A seguir, vamos explorar o que é componentização, como ela funciona e como você pode usá-la para tornar seu código mais organizado e fácil de manter.
+Em vez de criar uma tela gigante com tudo misturado, nós separamos o projeto em peças menores, como:
 
-No React Native, um **componente** é uma função ou classe que retorna uma parte da interface do usuário. Cada componente pode ter seu próprio estilo e lógica, e pode ser reutilizado em diferentes lugares do seu aplicativo.
+* botões;
+* cards;
+* campos de formulário;
+* cabeçalhos;
+* itens de lista.
 
-### Por que componentizar?
+## Por que componentizar?
 
-* **Reutilização**: Você pode usar o mesmo componente em várias partes da aplicação, evitando a duplicação de código.
-* **Manutenção**: Código dividido em componentes menores é mais fácil de entender e manter.
-* **Organização**: Ajuda a manter o código organizado e modular, facilitando o trabalho em equipe.
+* **Reutilização**: o mesmo componente pode aparecer em várias telas.
+* **Organização**: cada parte da interface fica em um lugar previsível.
+* **Manutenção**: fica mais fácil corrigir ou melhorar um trecho do app.
+* **Leitura**: uma tela grande fica muito mais clara quando delega partes para componentes menores.
 
-### Passo a passo para criar componentes
+## Exemplo: criando um botão reutilizável
 
-Vamos criar um botão reutilizável que pode ser usado em diferentes partes da nossa aplicação.
-
-Primeiro, devemos criar o arquivo do componente. Vamos chamá-lo de `CustomButton.js`.
+Vamos criar um componente chamado `CustomButton.js`.
 
 ```jsx
-// CustomButton.js
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet } from "react-native";
 
-// Componente CustomButton
-const CustomButton = ({ title, onPress }) => {
+export default function CustomButton({ title, onPress }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <Pressable style={styles.button} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
-};
+}
 
-// Estilos para o componente CustomButton
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
+    backgroundColor: "#1f3c88",
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    alignItems: "center",
   },
   text: {
-    color: '#FFFFFF',
+    color: "#fff",
     fontSize: 16,
+    fontWeight: "600",
   },
 });
-
-// Exporta o componente para que possa ser usado em outros arquivos
-export default CustomButton;
-
 ```
 
-Agora, vamos usar o `CustomButton` em nosso componente principal, que será o `App.js`.
+Agora vamos usar esse componente no `App.js`.
 
 ```jsx
-// App.js
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import CustomButton from './CustomButton'; // Importa o componente CustomButton
+import { Alert, View, Text, StyleSheet } from "react-native";
+import CustomButton from "./CustomButton";
 
 export default function App() {
-  // Função chamada quando o botão é pressionado
-  const handlePress = () => {
-    alert('Botão pressionado!');
-  };
+  function handlePress() {
+    Alert.alert("Ação", "Botão pressionado!");
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bem-vindo ao Meu App!</Text>
-      <CustomButton title="Clique Aqui" onPress={handlePress} />
+      <CustomButton title="Clique aqui" onPress={handlePress} />
     </View>
   );
 }
 
-// Estilos para o componente App
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    fontWeight: "700",
   },
 });
 ```
 
-#### Explicação do Exemplo
+## O que esse exemplo ensina
 
-1. **Criação do Componente**:
-   * **`CustomButton.js`**: Criamos um componente funcional que retorna um botão estilizado. Este componente recebe duas propriedades (`title` e `onPress`). O botão é estilizado com `StyleSheet`, e o texto é exibido dentro do botão.
-2. **Importação e Uso**:
-   * **`App.js`**: Importamos o `CustomButton` e o utilizamos dentro do componente `App`. Passamos as propriedades `title` e `onPress` para personalizar o botão.
+### Separação de responsabilidade
 
-#### Benefícios da Componentização
+O botão sabe renderizar o botão.
 
-* **Facilidade de Manutenção**: Alterações no `CustomButton` serão refletidas em todos os lugares onde ele é usado, facilitando a manutenção e atualização.
-* **Organização do Código**: Mantém seu código limpo e organizado, dividindo-o em partes menores e mais gerenciáveis.
-* **Reutilização**: Permite criar componentes reutilizáveis que economizam tempo e reduzem a duplicação de código.
+O `App` sabe quando ele deve ser usado e qual ação dispara.
 
-### Conclusão
+### Reutilização com props
 
-A componentização é uma prática essencial no desenvolvimento com React Native. Ao dividir a interface em componentes menores e reutilizáveis, você melhora a organização, facilita a manutenção e torna o código mais legível. Experimente criar seus próprios componentes e veja como eles podem simplificar o desenvolvimento de aplicativos complexos.
+O componente recebe:
+
+* `title`
+* `onPress`
+
+Essas props permitem usar o mesmo botão em vários contextos diferentes sem duplicar a estrutura.
+
+## Estrutura comum em projetos
+
+Conforme o app cresce, uma organização comum é:
+
+```text
+src/
+  components/
+    CustomButton.js
+    UserCard.js
+  screens/
+    HomeScreen.js
+    DetailsScreen.js
+```
+
+Essa separação ajuda a distinguir:
+
+* componentes reutilizáveis;
+* telas completas;
+* arquivos de serviço e lógica.
+
+## Quando um trecho merece virar componente?
+
+Pergunte:
+
+* esse bloco será repetido?
+* esse trecho já está deixando a tela longa demais?
+* essa parte possui um visual ou comportamento próprio?
+
+Se a resposta for “sim” para alguma dessas perguntas, provavelmente vale componentizar.
+
+## Conclusão
+
+Componentização não é só uma técnica de organização. Ela é uma forma de pensar a interface em blocos consistentes, reaproveitáveis e mais fáceis de evoluir. Em React Native, isso é essencial para manter o projeto saudável conforme ele cresce.

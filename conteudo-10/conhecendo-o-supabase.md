@@ -2,34 +2,138 @@
 
 <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
-O **Supabase** é uma plataforma de desenvolvimento de backend como serviço (BaaS) de código aberto, que oferece soluções completas para criar rapidamente a infraestrutura necessária em um aplicativo. Ele se destaca por usar tecnologias já consolidadas, como o **PostgreSQL** (como banco de dados) e o **PostgREST** (para criar automaticamente uma API RESTful a partir do banco). Isso facilita o desenvolvimento, especialmente em projetos como aplicativos móveis.
+O **Supabase** é uma plataforma de backend que combina várias peças muito úteis para aplicativos:
 
-Vamos entender três funcionalidades principais que o Supabase oferece:
+* autenticação;
+* banco de dados PostgreSQL;
+* APIs geradas a partir do banco;
+* armazenamento de arquivos;
+* recursos em tempo real.
 
-## Authentication
+Para projetos mobile com React Native, ele é especialmente interessante porque reduz bastante a quantidade de infraestrutura que precisaríamos montar manualmente.
 
-O módulo de **Authentication** do Supabase permite a criação e gerenciamento de usuários, autenticação com provedores externos e verificação de segurança em uma aplicação. Em um app React Native, isso é particularmente útil para criar funcionalidades de login, logout e autenticação de usuários.
+## O que o Supabase entrega
 
-* **Criação de Conta e Login**: Supabase permite que os usuários criem contas usando e-mail e senha, e oferece autenticação de provedores externos (como Google, GitHub, Facebook, etc.).
-* **Autenticação de Sessão**: Ao fazer login, o Supabase gera um token JWT para gerenciar a sessão do usuário, permitindo o acesso seguro a dados e funcionalidades.
-* **Recuperação de Senha e Verificação de E-mail**: Ferramentas para reset de senha e verificação de e-mail estão disponíveis, o que melhora a segurança e a experiência do usuário.
+### Authentication
 
-## Database
+Com Supabase Auth, podemos implementar:
 
-O Supabase usa o **PostgreSQL** como banco de dados, oferecendo uma experiência de banco de dados SQL relacional, com a vantagem de ser altamente escalável. Esse banco suporta dados complexos, como JSON, e conta com funcionalidades avançadas de SQL.
+* cadastro com email e senha;
+* login e logout;
+* recuperação de senha;
+* persistência de sessão;
+* autenticação com provedores externos.
 
-* **CRUD e Real-time**: Com o Supabase, é possível realizar operações de CRUD (Create, Read, Update, Delete) diretamente pela API REST ou por meio de consultas SQL. Um dos diferenciais é o **real-time** — qualquer atualização no banco é transmitida em tempo real para o cliente, facilitando a atualização automática de dados em apps.
-* **Controle de Acesso**: O Supabase permite configurar regras de segurança (Row Level Security - RLS) no nível das linhas do banco, essencial para limitar o acesso aos dados com base na autenticação do usuário.
-* **Consultas Avançadas**: Oferece suporte para consultas complexas, incluindo junções (JOINs) e filtros, e é otimizado para desempenho.
+Em aplicativos, isso significa controlar quem pode entrar, quais dados cada pessoa pode acessar e como manter a sessão ativa.
 
-## Storage
+### Database
 
-O **Supabase Storage** é um sistema para armazenamento de arquivos e mídia, permitindo o upload e gerenciamento de arquivos, como imagens, vídeos e documentos. Em aplicativos móveis, é útil para armazenar imagens de perfil, documentos ou qualquer arquivo que precise ser mantido no servidor.
+O banco de dados do Supabase é baseado em **PostgreSQL**.
 
-* **Upload e Download de Arquivos**: Supabase oferece uma API para fazer upload de arquivos e organizá-los em pastas, como uma estrutura de buckets.
-* **Controle de Permissão**: O Supabase permite definir o acesso aos arquivos de forma pública ou privada, ideal para proteger documentos sensíveis e tornar públicas somente as mídias autorizadas.
-* **Integração com o Database**: É possível armazenar metadados dos arquivos no banco de dados, relacionando o armazenamento com as informações do usuário, como dados de perfil.
+Isso permite:
+
+* tabelas relacionais;
+* filtros;
+* ordenação;
+* consultas poderosas;
+* políticas de segurança com **RLS** (Row Level Security).
+
+Um ponto importante: em Supabase, segurança de dados não depende só do código do app. Ela também depende da configuração correta no banco.
+
+### Storage
+
+O Storage serve para guardar arquivos, como:
+
+* fotos de perfil;
+* imagens de produtos;
+* documentos;
+* anexos.
+
+Ele funciona com buckets e pode ser configurado com acesso público ou privado.
+
+## Instalando no projeto React Native com Expo
+
+Em projetos atuais com Expo, um fluxo comum é:
+
+```bash
+npx expo install @supabase/supabase-js @react-native-async-storage/async-storage react-native-url-polyfill
+```
+
+## Variáveis de ambiente
+
+No Expo, variáveis usadas no código do app devem começar com `EXPO_PUBLIC_`.
+
+Exemplo de `.env`:
+
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica_aqui
+```
+
+## Criando o cliente
+
+Um arquivo comum para iniciar o Supabase seria `lib/supabase.js`:
+
+```jsx
+import "react-native-url-polyfill/auto";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    storage: AsyncStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,
+  },
+});
+```
+
+## Exemplo simples de leitura de dados
+
+```jsx
+import { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { supabase } from "./lib/supabase";
+
+export default function App() {
+  const [tarefas, setTarefas] = useState([]);
+
+  useEffect(() => {
+    async function loadTasks() {
+      const { data, error } = await supabase.from("tasks").select("*");
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setTarefas(data);
+    }
+
+    loadTasks();
+  }, []);
+
+  return (
+    <View>
+      {tarefas.map((task) => (
+        <Text key={task.id}>{task.title}</Text>
+      ))}
+    </View>
+  );
+}
+```
+
+## Boas práticas importantes
+
+* use sempre a chave pública no app cliente;
+* nunca exponha `service_role` no frontend;
+* configure RLS nas tabelas expostas;
+* pense em autenticação e permissão como partes do projeto, não como detalhe final.
 
 ## Conclusão
 
-O Supabase é uma plataforma robusta para construir o backend de aplicativos com React Native, com funcionalidades integradas que facilitam a criação de apps com autenticação de usuários, banco de dados em tempo real e armazenamento seguro de arquivos. Como é open source, pode ser adaptado e escalado conforme as necessidades do projeto.
+Supabase é uma solução muito forte para projetos React Native porque reúne autenticação, banco e storage em um fluxo acessível. Para o curso, ele ajuda a aproximar bastante o aluno de uma stack real de aplicativo moderno.

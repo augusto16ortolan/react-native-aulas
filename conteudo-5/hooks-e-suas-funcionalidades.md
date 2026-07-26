@@ -1,38 +1,37 @@
 ---
 description: >-
-  Explore os Hooks do React Native e como eles permitem gerenciar estado e
-  efeitos colaterais de forma mais eficiente.
+  Explore os hooks mais importantes do React para gerenciar estado, efeitos e
+  compartilhamento de dados em aplicativos React Native.
 ---
 
 # Hooks e suas funcionalidades
 
 <figure><img src="../.gitbook/assets/image (24).png" alt=""><figcaption></figcaption></figure>
 
-Os hooks foram introduzidos no React para permitir que os desenvolvedores utilizem o estado e outras funcionalidades do React sem a necessidade de escrever classes. Eles são funções especiais que permitem "conectar" as funcionalidades do React ao seu código de forma mais simples e direta. Isso torna o código mais legível e fácil de manter.
+Hooks são funções especiais do React que permitem usar recursos como estado, efeitos e contexto em componentes funcionais.
 
-Vamos focar em quatro hooks fundamentais: `useState`, `useEffect`, `useLayoutEffect` e `useContext`. Vamos explicar para que cada um serve e fornecer exemplos práticos em React Native para que você possa entender como usá-los em suas aplicações.
+No React Native moderno, eles são parte do fluxo normal de desenvolvimento. Saber usar hooks bem é essencial para construir telas que:
 
-### useState
+* respondem à interação do usuário;
+* carregam dados;
+* atualizam a interface;
+* compartilham informações entre componentes.
 
-O `useState` é um hook que permite adicionar estado aos componentes funcionais. Ele retorna um par de valores: o estado atual e uma função para atualizá-lo.
+## `useState`
 
-Vamos criar um contador simples que incrementa um valor cada vez que um botão é pressionado.
+`useState` cria estado local dentro de um componente.
 
 ```jsx
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { useState } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 
 export default function App() {
-  // Declara uma nova variável de estado, "count", com valor inicial 0
   const [count, setCount] = useState(0);
 
   return (
     <View style={styles.container}>
       <Text>Você clicou {count} vezes</Text>
-      <Button
-        title="Clique aqui"
-        onPress={() => setCount(count + 1)} // Atualiza o estado "count" incrementando seu valor
-      />
+      <Button title="Clique aqui" onPress={() => setCount(count + 1)} />
     </View>
   );
 }
@@ -40,186 +39,204 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
   },
 });
 ```
 
-**Passo a passo**:
+Use `useState` para valores que mudam ao longo da vida da tela, como:
 
-1. Importamos o `useState` do React.
-2. Utilizamos o `useState` para declarar uma variável de estado chamada `count` e uma função para atualizá-la, `setCount`.
-3. O estado inicial de `count` é 0.
-4. No evento `onPress` do botão, chamamos `setCount` para incrementar o valor de `count`.
+* texto digitado;
+* loading;
+* lista carregada da API;
+* item selecionado.
 
-### useEffect
+## `useEffect`
 
-O `useEffect` é um hook que permite executar efeitos colaterais em componentes funcionais. Alguns exemplos de efeitos colaterais são: buscar dados, configurar uma assinatura ou atualizar o DOM. Ele é executado após a renderização do componente.
+`useEffect` executa efeitos colaterais depois da renderização do componente.
 
-Vamos buscar dados de uma API e exibi-los na tela.
+Exemplos de efeito colateral:
+
+* buscar dados;
+* ouvir eventos;
+* iniciar timers;
+* sincronizar algo com uma API.
 
 ```jsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { useEffect, useState } from "react";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 
 export default function App() {
-  const [data, setData] = useState(null);
+  const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/posts/1')
-      .then((response) => response.json())
-      .then((json) => {
-        setData(json);
+    async function fetchPost() {
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/posts/1"
+        );
+        const json = await response.json();
+        setPost(json);
+      } catch (err) {
+        setError("Não foi possível carregar os dados.");
+      } finally {
         setLoading(false);
-      });
-  }, []); // O array vazio [] significa que este efeito roda apenas uma vez após a primeira renderização
+      }
+    }
+
+    fetchPost();
+  }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator style={styles.center} size="large" color="#1f3c88" />;
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text>{error}</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
-      <Text>{data.title}</Text>
-      <Text>{data.body}</Text>
+      <Text style={styles.title}>{post.title}</Text>
+      <Text>{post.body}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
     padding: 20,
   },
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
 });
 ```
 
-**Passo a passo**:
+O array vazio `[]` faz o efeito rodar apenas na montagem inicial da tela.
 
-1. Importamos o `useState` e `useEffect` do React.
-2. Utilizamos `useState` para declarar as variáveis de estado `data` (dados da API) e `loading` (indicador de carregamento).
-3. Utilizamos `useEffect` para buscar dados da API quando o componente é montado.
-4. Quando os dados são recebidos, atualizamos o estado `data` e `loading`.
-5. Se ainda estivermos carregando, mostramos um indicador de carregamento (`ActivityIndicator`).
-6. Caso contrário, exibimos os dados da API.
+## `useLayoutEffect`
 
-### useLayoutEffect
+`useLayoutEffect` é parecido com `useEffect`, mas roda em um momento mais cedo do ciclo de atualização da interface.
 
-O `useLayoutEffect` é semelhante ao `useEffect`, mas ele é executado de forma síncrona após todas as mutações do DOM. Isso é útil quando você precisa realizar medições de layout ou atualizações do DOM antes da pintura.
-
-Vamos ajustar um layout com base na largura de um componente.
+Em React Native, ele é muito usado quando queremos configurar a tela assim que ela é exibida, por exemplo em navegação.
 
 ```jsx
-import React, { useState, useLayoutEffect, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useLayoutEffect } from "react";
+import { View, Text } from "react-native";
 
-export default function App() {
-  const [width, setWidth] = useState(0);
-  const viewRef = useRef(null);
-
+export default function DetailsScreen({ navigation }) {
   useLayoutEffect(() => {
-    viewRef.current.measure((x, y, w, h) => {
-      setWidth(w);
+    navigation.setOptions({
+      title: "Detalhes do Produto",
     });
-  }, []);
+  }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <View ref={viewRef} style={styles.box}>
-        <Text>A largura da caixa é: {width}</Text>
-      </View>
+    <View>
+      <Text>Tela de detalhes</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  box: {
-    width: 200,
-    height: 100,
-    backgroundColor: 'lightblue',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 ```
 
-**Passo a passo**:
+Para iniciantes, essa costuma ser uma aplicação mais útil e realista do que exemplos de medição manual de layout.
 
-1. Importamos o `useState`, `useLayoutEffect` e `useRef` do React.
-2. Utilizamos `useState` para declarar a variável de estado `width`.
-3. Utilizamos `useRef` para criar uma referência para a `View`.
-4. Utilizamos `useLayoutEffect` para medir a largura da `View` após a renderização e atualizar o estado `width`.
+## `useContext`
 
-### useContext
-
-O `useContext` é um hook que permite acessar o contexto do React. O contexto é uma forma de passar dados através da árvore de componentes sem precisar passar explicitamente as props em cada nível.
-
-Vamos criar um contexto de tema e usá-lo em componentes.
+`useContext` permite acessar valores de um contexto React sem precisar passar props em vários níveis.
 
 ```jsx
-import React, { useState, useContext, createContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { createContext, useContext, useState } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 
-// Cria um contexto de tema
 const ThemeContext = createContext();
 
-export default function App() {
-  const [theme, setTheme] = useState('light');
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState("light");
+
+  function toggleTheme() {
+    setTheme((currentTheme) =>
+      currentTheme === "light" ? "dark" : "light"
+    );
+  }
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <View style={styles.container}>
-        <ThemeToggle />
-        <Button title="Trocar Tema" onPress={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
-      </View>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
     </ThemeContext.Provider>
   );
 }
 
-function ThemeToggle() {
-  const theme = useContext(ThemeContext);
+function ThemeCard() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   return (
-    <View style={theme === 'light' ? styles.light : styles.dark}>
-      <Text>O tema atual é {theme}</Text>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: isDark ? "#1f2937" : "#f3f4f6" },
+      ]}
+    >
+      <Text style={{ color: isDark ? "#fff" : "#111" }}>
+        Tema atual: {theme}
+      </Text>
+      <Button title="Alternar tema" onPress={toggleTheme} />
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <View style={styles.container}>
+        <ThemeCard />
+      </View>
+    </ThemeProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  light: {
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#fff',
   },
-  dark: {
+  card: {
+    width: "100%",
     padding: 20,
-    backgroundColor: '#333',
-    color: '#fff',
+    borderRadius: 12,
+    gap: 12,
   },
 });
 ```
 
-**Passo a passo**:
+## Quando usar cada hook
 
-1. Importamos o `useState`, `useContext` e `createContext` do React.
-2. Criamos um contexto de tema com `createContext`.
-3. Utilizamos `useState` para declarar a variável de estado `theme`.
-4. Usamos `ThemeContext.Provider` para fornecer o valor do tema aos componentes filhos.
-5. Criamos um componente `ThemeToggle` que usa `useContext` para acessar o valor do tema e exibir o tema atual.
+* **`useState`**: para estado local da tela ou componente.
+* **`useEffect`**: para buscar dados, ouvir eventos e sincronizar efeitos.
+* **`useLayoutEffect`**: para ajustes que precisam acontecer junto da configuração visual, como cabeçalho de navegação.
+* **`useContext`**: para compartilhar valores entre vários componentes.
 
-### Conclusão
+## Conclusão
 
-Os hooks são uma poderosa adição ao React, permitindo que os desenvolvedores gerenciem estado e outros recursos de forma mais eficiente e direta. Com `useState`, você pode adicionar e gerenciar estado local em componentes funcionais. Com `useEffect` e `useLayoutEffect`, você pode lidar com efeitos colaterais e atualizações de layout. E com `useContext`, você pode acessar dados de contexto sem precisar passar props manualmente por cada nível da árvore de componentes. Dominar esses hooks é fundamental para criar aplicativos React Native robustos e eficientes.
+Hooks são a espinha dorsal do React moderno. Dominar bem esses quatro já permite construir telas dinâmicas, formular interações, carregar dados externos e organizar estados compartilhados com muito mais clareza.

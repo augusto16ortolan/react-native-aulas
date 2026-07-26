@@ -1,63 +1,82 @@
 ---
 description: >-
-  Conectando seu aplicativo a APIs REST para buscar e enviar dados. Vamos
-  explorar técnicas para fazer requisições, manipular respostas e integrar essas
-  funcionalidades de forma eficiente em seu app.
+  Conectando seu aplicativo a APIs REST para buscar e enviar dados com boas
+  práticas de loading, erro e organização.
 ---
 
 # Consumindo APIs REST e integrando com seu app
 
 <figure><img src="../.gitbook/assets/image (43).png" alt=""><figcaption></figcaption></figure>
 
-Se você já está familiarizado com o que é uma API (Interface de Programação de Aplicações), agora vamos explorar como consumir uma API REST em seu aplicativo React Native. Usaremos o **Axios**, uma biblioteca popular para realizar requisições HTTP, que facilita a comunicação com APIs e o tratamento de respostas.
+Consumir APIs é uma parte central de muitos aplicativos. É assim que o app:
 
-### Configurando o axios
+* busca usuários;
+* lista produtos;
+* envia formulários;
+* salva tarefas;
+* sincroniza informações com o servidor.
 
-Para começar a usar o Axios em seu projeto, você precisa instalá-lo. No terminal, execute:
+Neste capítulo, vamos usar **Axios**, porque ele deixa o código claro e muito usado no mercado.
 
-```jsx
+## Instalando o Axios
+
+```bash
 npm install axios
 ```
 
-### Realizando requisições com axios
-
-O Axios facilita a realização de requisições HTTP e o tratamento das respostas. Vamos ver alguns exemplos de como usar o Axios para fazer chamadas a uma API REST.
-
-#### Fazendo uma requisição GET
-
-Uma requisição GET é usada para buscar dados de um servidor. Vamos buscar uma lista de usuários fictícios de uma API.
+## Exemplo prático: listando usuários
 
 ```jsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import axios from "axios";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    async function fetchUsers() {
       try {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        );
         setUsers(response.data);
       } catch (error) {
-        console.error('Erro ao buscar os dados', error);
-        Alert.alert('Erro', 'Não foi possível carregar os dados.');
+        console.error("Erro ao buscar usuários:", error);
+        Alert.alert("Erro", "Não foi possível carregar os dados.");
+      } finally {
+        setLoading(false);
       }
-    };
+    }
 
     fetchUsers();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#1f3c88" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Usuários</Text>
       <FlatList
         data={users}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text>{item.name}</Text>
+            <Text style={styles.name}>{item.name}</Text>
             <Text>{item.email}</Text>
           </View>
         )}
@@ -67,54 +86,83 @@ export default function UserList() {
 }
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     padding: 20,
   },
   header: {
     fontSize: 20,
-    marginBottom: 10,
+    fontWeight: "700",
+    marginBottom: 12,
   },
   item: {
-    padding: 10,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ddd",
+  },
+  name: {
+    fontWeight: "600",
   },
 });
 ```
 
-**O que está acontecendo aqui?**
+## O que esse exemplo mostra
 
-* **`axios.get()`**: Envia uma requisição GET para a URL especificada.
-* **`useEffect()`**: Utilizado para buscar os dados assim que o componente é montado.
-* **`setUsers()`**: Atualiza o estado com a lista de usuários recebida.
-* **`FlatList`**: Exibe a lista de usuários na tela.
+* `axios.get()` faz a requisição;
+* `useEffect()` dispara a busca quando a tela abre;
+* `loading` controla o estado de carregamento;
+* `try/catch` trata falhas;
+* `FlatList` renderiza os dados.
 
-#### Fazendo uma requisição POST
-
-Uma requisição POST é usada para enviar dados ao servidor. Vamos criar um novo usuário fictício.
+## Exemplo prático: enviando dados com `POST`
 
 ```jsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import axios from 'axios';
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import axios from "axios";
 
 export default function CreateUser() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post('https://jsonplaceholder.typicode.com/users', {
-        name,
-        email,
-      });
-      Alert.alert('Usuário criado com sucesso!', `Nome: ${response.data.name}`);
-    } catch (error) {
-      console.error('Erro ao criar usuário', error);
-      Alert.alert('Erro', 'Não foi possível criar o usuário.');
+  async function handleSubmit() {
+    if (!name || !email) {
+      Alert.alert("Atenção", "Preencha nome e email.");
+      return;
     }
-  };
+
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/users",
+        {
+          name,
+          email,
+        }
+      );
+
+      Alert.alert(
+        "Usuário criado",
+        `Nome retornado pela API: ${response.data.name}`
+      );
+      setName("");
+      setEmail("");
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      Alert.alert("Erro", "Não foi possível criar o usuário.");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -128,6 +176,8 @@ export default function CreateUser() {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        keyboardType="email-address"
+        autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
       />
@@ -140,27 +190,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: "center",
   },
   header: {
     fontSize: 20,
-    marginBottom: 10,
+    fontWeight: "700",
+    marginBottom: 12,
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 8,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
   },
 });
 ```
 
-**O que está acontecendo aqui?**
+## Próximo nível de organização
 
-* **`axios.post()`**: Envia uma requisição POST para a URL especificada com os dados do novo usuário.
-* **`handleSubmit()`**: Função que é chamada quando o botão é pressionado.
-* **`Alert.alert()`**: Exibe uma mensagem de sucesso.
+Quando o projeto cresce, o ideal é não deixar a URL da API espalhada em vários arquivos. Um padrão comum é criar um arquivo de serviço:
 
-### Conclusão
+```javascript
+import axios from "axios";
 
-Consumir APIs REST é uma habilidade essencial no desenvolvimento de aplicativos móveis. Com o Axios, você pode fazer requisições HTTP para buscar ou enviar dados de forma simples e eficiente. Lembre-se de sempre tratar os erros e garantir uma boa experiência do usuário, mesmo quando as coisas não saem como planejado.
+export const api = axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com",
+});
+```
+
+Depois:
+
+```javascript
+const response = await api.get("/users");
+```
+
+## Conclusão
+
+Consumir APIs com Axios em React Native não é só “fazer uma requisição”. O fluxo completo envolve carregar, tratar erro, atualizar interface e organizar o código para crescer sem virar bagunça.

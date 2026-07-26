@@ -1,126 +1,124 @@
 ---
 description: >-
-  Nesta seção, vamos iniciar a prática com Javascript e Node.js, aplicando os
-  conceitos iniciais da programação.
+  Nesta seção, vamos praticar os fundamentos do JavaScript que serão usados em
+  todo o restante do curso.
 ---
 
 # Vamos para a prática?
 
 <figure><img src="../.gitbook/assets/React Native (2).png" alt=""><figcaption></figcaption></figure>
 
+Antes de entrar no React Native, vamos revisar alguns blocos essenciais da linguagem. Todos os exemplos abaixo funcionam em JavaScript moderno e seguem um padrão mais próximo do que vamos usar nos projetos.
+
 ### Imprimindo mensagens
 
 ```javascript
 console.log("Hello world!");
+console.log("Bem-vindo ao curso de desenvolvimento de aplicativos.");
 ```
 
-O `console.log` é uma das funções mais básicas e úteis em Javascript, utilizada principalmente para exibir informações no console do navegador ou do ambiente de desenvolvimento. Essa função é fundamental para depuração e para fornecer feedback durante o desenvolvimento.
+`console.log()` é útil para inspecionar valores, entender o fluxo do programa e depurar problemas durante o desenvolvimento.
 
-### Tipagens
+### Tipos de dados
 
 ```javascript
-console.log(typeof "1"); //string
-console.log(typeof 1); //number
-console.log(typeof 1.0); //number
-console.log(typeof true); //boolean
+console.log(typeof "1"); // string
+console.log(typeof 1); // number
+console.log(typeof true); // boolean
 
-lista = [1, 2, 3, 4 ,5]
-console.log(typeof lista); //object
+const lista = [1, 2, 3, 4, 5];
+console.log(typeof lista); // object
 
-pessoa = {
-    name: "Jhon Snow"
-}
-console.log(typeof pessoa); //object
+const pessoa = {
+  nome: "John Snow",
+  idade: 28,
+};
+console.log(typeof pessoa); // object
 ```
 
-**String**: Representa uma sequência de caracteres.\
-**Number**: Representa números, tanto inteiros quanto de ponto flutuante.\
-**Boolean**: Representa valores lógicos, verdadeiro (`true`) ou falso (`false`).\
-**Array**: Em Javascript, arrays são tecnicamente objetos, mas são usados para armazenar listas ordenadas de valores.\
-**Object**: Representa coleções de pares chave-valor e pode ser usado para armazenar dados estruturados.\
-\
-Entender os tipos de dados e como usar a função `typeof` ajuda a escrever código mais robusto e a evitar erros comuns. Lembre-se de que, enquanto `typeof` é útil para identificar tipos primitivos e objetos, verificar arrays e nulos pode exigir métodos adicionais.
+Pontos importantes:
+
+* `string`, `number` e `boolean` são tipos básicos.
+* arrays e objetos aparecem como `object` no `typeof`.
+* em código moderno, prefira `const` por padrão e use `let` quando o valor realmente precisar mudar.
 
 ### Estruturas de condição
 
-#### If, else if e else
+#### `if`, `else if` e `else`
 
 ```javascript
-num = 10;
-if (num > 0) {
-    console.log('Número positivo');
-} else if (num < 0) {
-    console.log('Número negativo');
+const numero = 10;
+
+if (numero > 0) {
+  console.log("Número positivo");
+} else if (numero < 0) {
+  console.log("Número negativo");
 } else {
-    console.log('Zero');
+  console.log("Zero");
 }
 ```
 
-As estruturas condicionais `if`, `else if` e `else` permitem que você controle o fluxo do seu programa com base em condições específicas. Usar essas estruturas de maneira eficaz é essencial para criar lógica condicional em seus scripts Javascript.
-
-#### Switch case
+#### `switch`
 
 ```javascript
-num = 20;
-switch(num) {
-    case 10:
-        console.log('O número é 10');
-        break;
-    case 20:
-        console.log('O número é 20');
-        break;
-    default:
-        console.log('Outro número');
+const statusPedido = "enviado";
+
+switch (statusPedido) {
+  case "novo":
+    console.log("Pedido recém-criado");
+    break;
+  case "enviado":
+    console.log("Pedido em transporte");
+    break;
+  default:
+    console.log("Status não mapeado");
 }
 ```
-
-A estrutura `switch` é útil quando você precisa comparar uma variável com múltiplos valores possíveis e executar diferentes blocos de código com base no valor correspondente. Ela oferece uma maneira mais organizada e legível de lidar com múltiplas condições em comparação com uma série de instruções `if` e `else if`.
 
 ### Laços de repetição
 
-#### While
+#### `while`
 
 ```javascript
-i = 0;
-while (i < 5) {
-    console.log(i);
-    i++;
+let i = 0;
+
+while (i < 3) {
+  console.log("while:", i);
+  i++;
 }
 ```
 
-O `while` é uma ferramenta poderosa para realizar repetições baseadas em condições. É ideal para cenários onde o número de iterações não é conhecido antecipadamente e depende de uma condição que deve ser verificada a cada iteração.
-
-#### For
+#### `for`
 
 ```javascript
-for (j = 0; j < 5; j++) {
-    console.log(j);
+for (let j = 0; j < 3; j++) {
+  console.log("for:", j);
 }
 ```
 
-O `for` é uma estrutura de repetição versátil e eficiente para executar um bloco de código um número específico de vezes. É especialmente útil quando o número de iterações é conhecido antecipadamente ou quando se trabalha com estruturas de dados iteráveis, como arrays.
-
-#### For...in
+#### `for...in`
 
 ```javascript
-objeto = {a: 1, b: 2, c: 3};
-for (chave in objeto) {
-    console.log(chave, objeto[chave]);
+const usuario = { nome: "Ana", cidade: "Passo Fundo" };
+
+for (const chave in usuario) {
+  console.log(chave, usuario[chave]);
 }
 ```
 
-O `for...in` é uma ferramenta útil para iterar sobre as propriedades de um objeto, permitindo acessar e manipular as chaves e valores do objeto de forma dinâmica. É importante ter cuidado com a herança de propriedades e com a ordem das propriedades ao usar `for...in`.
+Use `for...in` para percorrer **chaves de objetos**.
 
-#### For...of
+#### `for...of`
 
 ```javascript
-lista = [1, 2, 3, 4, 5];
-for (valor of lista) {
-    console.log(valor);
+const tecnologias = ["JavaScript", "React", "React Native"];
+
+for (const tecnologia of tecnologias) {
+  console.log(tecnologia);
 }
 ```
 
-O `for...of` é uma estrutura de repetição moderna e intuitiva para iterar sobre os valores de coleções iteráveis. É especialmente útil para trabalhar com arrays e outras estruturas de dados que implementam o protocolo de iteração, oferecendo uma maneira clara e direta de acessar e processar valores.
+Use `for...of` para percorrer **valores de coleções iteráveis**, como arrays.
 
 ### Funções
 
@@ -128,24 +126,42 @@ O `for...of` é uma estrutura de repetição moderna e intuitiva para iterar sob
 
 ```javascript
 function soma(a, b) {
-    return a + b;
+  return a + b;
 }
 
-console.log(soma(2, 3)); 
+console.log(soma(2, 3));
 ```
-
-A declaração tradicional de funções em Javascript é uma das formas mais comuns de definir uma função. Ela permite encapsular um bloco de código que pode ser executado quando a função é chamada. As funções definidas desta forma são "hoisted", o que significa que podem ser usadas antes de sua declaração no código.
 
 #### Arrow function
 
 ```javascript
-const subtrai = (a, b) => a - b;
+const subtrai = (a, b) => {
+  return a - b;
+};
 
-console.log(subtrai(5, 2)); 
+console.log(subtrai(5, 2));
 ```
 
-As arrow functions oferecem uma maneira simplificada e mais elegante de definir funções em JavaScript. Elas são ideais para funções pequenas e para manter o contexto léxico de `this`, tornando o código mais limpo e fácil de entender.
+Se a função tiver apenas uma expressão de retorno, ela pode ser encurtada:
+
+```javascript
+const multiplica = (a, b) => a * b;
+```
+
+### Arrays e objetos no dia a dia
+
+```javascript
+const tarefas = [
+  { id: 1, titulo: "Estudar JavaScript", concluida: false },
+  { id: 2, titulo: "Criar primeira tela", concluida: true },
+];
+
+console.log(tarefas[0].titulo);
+console.log(tarefas[1].concluida);
+```
+
+Esse formato aparece o tempo todo em aplicativos, APIs e listas renderizadas em tela.
 
 ## Conclusão
 
-Compreender e utilizar eficientemente essas estruturas de repetição e formas de declarar funções é essencial para escrever código Javascript claro, conciso e robusto. Esses conceitos são fundamentais para o desenvolvimento de aplicações modernas e serão aplicados em projetos práticos com Node.js, consolidando nosso aprendizado através da prática.
+Esses exemplos parecem simples, mas formam a base de quase tudo o que vamos construir depois: componentes, listas, estados, formulários, chamadas de API e navegação. Quanto mais natural ficar essa leitura em JavaScript, mais leve será o avanço no React Native.

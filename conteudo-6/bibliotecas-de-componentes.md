@@ -1,63 +1,53 @@
 ---
 description: >-
-  Explore como utilizar e integrar bibliotecas de componentes prontos no seu
-  projeto. Veja como bibliotecas podem acelerar o desenvolvimento e oferecer uma
-  variedade de elementos prontos para uso.
+  Explore bibliotecas de componentes prontos para acelerar o desenvolvimento e
+  manter consistência visual no aplicativo.
 ---
 
 # Bibliotecas de componentes
 
 <figure><img src="../.gitbook/assets/React Native (8).png" alt=""><figcaption></figcaption></figure>
 
-Bibliotecas de componentes são coleções de componentes pré-fabricados que você pode utilizar para acelerar o desenvolvimento e garantir consistência no design do seu aplicativo. Em vez de criar todos os componentes do zero, você pode aproveitar bibliotecas prontas que oferecem uma variedade de componentes estilizados e funcionais, economizando tempo e esforço.
+Bibliotecas de componentes ajudam a acelerar a construção da interface. Em vez de criar tudo do zero, você reaproveita componentes já prontos, como:
 
-Neste tópico, vamos explorar o conceito de bibliotecas de componentes, discutir alguns exemplos populares e como você pode integrá-las em seu projeto React Native.
+* botões;
+* inputs;
+* cards;
+* diálogos;
+* barras de navegação;
+* menus.
 
-### Por que usar bibliotecas de componentes?
+Isso pode economizar muito tempo, principalmente em projetos com prazo curto ou com várias telas parecidas.
 
-* **Economia de Tempo**: Reduz o tempo de desenvolvimento ao fornecer componentes já prontos e estilizados.
-* **Consistência de Design**: Mantém a aparência e o comportamento consistentes em todo o aplicativo.
-* **Funcionalidade Avançada**: Muitas bibliotecas oferecem componentes com funcionalidades avançadas que seriam complexos de implementar do zero.
-* **Manutenção e Atualizações**: Bibliotecas populares são frequentemente atualizadas e mantidas pela comunidade, garantindo melhorias e correções de bugs.
+## Por que usar uma biblioteca?
 
-### Exemplos populares de bibliotecas de componentes
+* **Velocidade**: vários componentes já vêm prontos para uso.
+* **Consistência**: o app mantém um padrão visual mais uniforme.
+* **Acessibilidade**: muitas bibliotecas já tratam comportamento básico de interação.
+* **Produtividade**: sobra mais tempo para focar na lógica do aplicativo.
 
-#### React Native Elements ([https://reactnativeelements.com/](https://reactnativeelements.com/))
+## Cuidados antes de adotar
 
-Uma biblioteca que oferece uma ampla gama de componentes estilizados e personalizáveis para React Native.
+Nem sempre a melhor decisão é instalar uma biblioteca só porque ela existe.
 
-```jsx
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+Antes de usar, avalie:
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Input placeholder="Digite seu nome" />
-      <Button title="Enviar" onPress={() => alert('Botão pressionado!')} />
-    </View>
-  );
-}
+* a biblioteca está ativa e bem documentada?
+* funciona bem com Expo e com a versão atual do projeto?
+* os componentes se encaixam no estilo visual do app?
+* vale mais a pena usar a biblioteca inteira ou criar 2 ou 3 componentes próprios?
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-});
-```
+## Bibliotecas populares
 
-#### React Native Paper ([https://reactnativepaper.com/](https://reactnativepaper.com/))
+### React Native Paper
 
-Uma biblioteca que implementa os princípios de design do Material Design, oferecendo uma ampla gama de componentes prontos.
+O **React Native Paper** é uma das opções mais conhecidas para quem quer trabalhar com componentes inspirados em Material Design.
+
+Exemplo:
 
 ```jsx
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, TextInput, Appbar } from 'react-native-paper';
+import { View, StyleSheet } from "react-native";
+import { Button, TextInput, Appbar } from "react-native-paper";
 
 export default function App() {
   return (
@@ -65,10 +55,12 @@ export default function App() {
       <Appbar.Header>
         <Appbar.Content title="Meu App" />
       </Appbar.Header>
-      <TextInput label="Digite seu nome" />
-      <Button mode="contained" onPress={() => alert('Botão pressionado!')}>
-        Enviar
-      </Button>
+      <View style={styles.content}>
+        <TextInput label="Digite seu nome" mode="outlined" />
+        <Button mode="contained" onPress={() => {}}>
+          Enviar
+        </Button>
+      </View>
     </View>
   );
 }
@@ -76,64 +68,79 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  },
+  content: {
     padding: 20,
+    gap: 16,
   },
 });
 ```
 
-#### Native Base ([https://nativebase.io/](https://nativebase.io/))
+### RNEUI (evolução do React Native Elements)
 
-Uma biblioteca de componentes que oferece uma série de componentes básicos e avançados, com uma grande ênfase na personalização e na acessibilidade.
+O projeto que muita gente conheceu como **React Native Elements** evoluiu para o ecossistema **RNEUI**.
+
+Exemplo:
 
 ```jsx
-import React from 'react';
-import { Container, Header, Content, Button, Text } from 'native-base';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from "react-native";
+import { Button, Input } from "@rneui/themed";
 
 export default function App() {
   return (
-    <Container style={styles.container}>
-      <Header>
-        <Text>Meu App</Text>
-      </Header>
-      <Content padder>
-        <Button onPress={() => alert('Botão pressionado!')}>
-          <Text>Enviar</Text>
-        </Button>
-      </Content>
-    </Container>
+    <View style={styles.container}>
+      <Input placeholder="Digite seu nome" />
+      <Button title="Enviar" />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    padding: 20,
   },
 });
 ```
 
-### Como integrar com nosso código?
+## Como instalar
 
-#### Instalação
+O processo depende da biblioteca escolhida. Por isso, sempre consulte a documentação oficial.
 
-Utilize o gerenciador de pacotes npm ou yarn para instalar a biblioteca. Por exemplo, para instalar o React Native Elements, você pode usar:
+Exemplo com React Native Paper:
 
-```javascript
-npm install react-native-elements
+```bash
+npm install react-native-paper
 ```
 
-#### Importação e uso
+Exemplo com RNEUI:
 
-Após a instalação, importe os componentes da biblioteca e utilize-os em seu código, como mostrado nos exemplos acima.
+```bash
+npm install @rneui/themed @rneui/base
+```
 
-#### Estilização e personalização
+Em projetos Expo, também pode ser necessário instalar dependências compatíveis usando `npx expo install`, dependendo do que a biblioteca pedir.
 
-Muitas bibliotecas oferecem opções para personalizar a aparência dos componentes. Consulte a documentação da biblioteca para aprender como aplicar estilos personalizados.
+## Quando criar componentes próprios é melhor
 
-### Conclusão
+Mesmo com bibliotecas, ainda faz sentido criar componentes próprios quando:
 
-Bibliotecas de componentes são ferramentas poderosas que ajudam a acelerar o desenvolvimento e garantir a consistência do design no seu aplicativo React Native. Elas oferecem componentes prontos e configuráveis que podem ser facilmente integrados e personalizados. Experimentar diferentes bibliotecas e escolher a que melhor se adapta às suas necessidades pode melhorar significativamente a eficiência do seu processo de desenvolvimento.
+* o visual do projeto é muito específico;
+* você só precisa de poucos componentes;
+* quer manter o app mais leve;
+* deseja entender melhor a construção da interface antes de abstrair demais.
+
+## Estratégia recomendada para a turma
+
+Para aprendizado, uma boa estratégia é:
+
+1. primeiro entender os componentes nativos do React Native;
+2. depois criar alguns componentes próprios;
+3. só então introduzir uma biblioteca para comparar produtividade e padrão visual.
+
+Assim, a biblioteca vira uma escolha consciente, e não uma muleta.
+
+## Conclusão
+
+Bibliotecas de componentes podem acelerar bastante o desenvolvimento, mas devem ser usadas com critério. Em um bom projeto, elas entram para resolver um problema real: ganhar velocidade, manter consistência e reduzir retrabalho sem esconder o entendimento da base do React Native.

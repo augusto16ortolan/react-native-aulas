@@ -1,64 +1,106 @@
 ---
 description: >-
-  Um fluxo simples com duas formas de obter a imagem (galeria ou câmera) e fazer
-  upload no Storage na nuvem.
+  Um fluxo simples para escolher ou capturar imagens e enviar arquivos para o
+  Supabase Storage.
 ---
 
 # Fazendo upload de imagens
 
 <figure><img src="../.gitbook/assets/image (41).png" alt=""><figcaption></figcaption></figure>
 
-### Como funciona
+Upload de imagens é um recurso muito comum em aplicativos:
 
-1. **Você pega uma imagem**
-   * **Galeria**: o usuário escolhe uma foto já existente
-   * **Câmera**: o usuário tira uma foto na hora
-2. O Expo te devolve um **`uri` local** (ex.: `file://...`).
-3. Para enviar ao Storage do Supabase no React Native, um jeito bem “tranquilo” é:
-   * ler o arquivo em **base64** (`expo-file-system`)
-   * converter para **ArrayBuffer**
-   * usar `supabase.storage.from("bucket").upload(...)`
-4. Depois do upload, você pode:
-   * pegar uma **URL pública** (se o bucket for público)
-   * ou usar URL assinada (mais seguro, mas aqui vamos manter simples)
+* foto de perfil;
+* imagens de produto;
+* comprovantes;
+* anexos de formulário.
 
-### Preparação rápida
+Neste exemplo, vamos usar:
 
-#### 1) Instale as libs
+* **Expo Image Picker**
+* **Expo FileSystem**
+* **Supabase Storage**
 
-```
-npx expo install expo-image-picker expo-file-systemnpm i @supabase/supabase-js base64-arraybuffer react-native-url-polyfill
-```
+## Fluxo geral
 
-#### 2) Variáveis de ambiente (Expo)
+1. o usuário escolhe uma imagem da galeria ou tira uma foto;
+2. o app recebe o `uri` local do arquivo;
+3. o arquivo é convertido para envio;
+4. a imagem é enviada para um bucket no Supabase;
+5. o app recebe a URL e pode exibir a imagem.
 
-No `.env`:
+## Instalação
 
-```
-EXPO_PUBLIC_SUPABASE_URL="SUA_URL_AQUI"
-EXPO_PUBLIC_SUPABASE_ANON_KEY="SUA_ANON_KEY_AQUI"
+```bash
+npx expo install expo-image-picker expo-file-system
+npx expo install @supabase/supabase-js @react-native-async-storage/async-storage react-native-url-polyfill
+npm install base64-arraybuffer
 ```
 
-#### 3) Storage no Supabase
+## Variáveis de ambiente
 
-* Crie um bucket chamado **`images`**
-* Para o exemplo ficar bem simples, deixe o bucket como **public** (assim `getPublicUrl` funciona direto)
+No arquivo `.env`:
 
-### Código completo (bem simples) — Galeria + Câmera + Upload
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica_aqui
+```
+
+## Preparando o bucket
+
+No Supabase:
+
+* crie um bucket chamado `images`;
+* para uma primeira prática, você pode deixá-lo público;
+* em projetos reais, pense com cuidado entre bucket público e privado.
+
+## Cliente Supabase
 
 ```jsx
 import "react-native-url-polyfill/auto";
-import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  }
+);
+
+export default supabase;
+```
+
+## Exemplo completo
+
+```jsx
+import "react-native-url-polyfill/auto";
+import { useState } from "react";
 import { View, Text, StyleSheet, Button, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { decode } from "base64-arraybuffer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  }
+);
 
 export default function UploadImage() {
   const [localUri, setLocalUri] = useState(null);
@@ -69,20 +111,15 @@ export default function UploadImage() {
     try {
       setUploading(true);
 
-      // 1) Lê a imagem em base64
       const base64 = await FileSystem.readAsStringAsync(uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      // 2) Base64 -> ArrayBuffer
       const arrayBuffer = decode(base64);
-
-      // 3) Define nome/caminho do arquivo
       const fileExt = uri.split(".").pop()?.toLowerCase() || "jpg";
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `uploads/${fileName}`;
 
-      // 4) Define contentType simples
       const contentType =
         fileExt === "png"
           ? "image/png"
@@ -90,27 +127,24 @@ export default function UploadImage() {
           ? "image/webp"
           : "image/jpeg";
 
-      // 5) Faz upload no bucket "images"
       const { error } = await supabase.storage
         .from("images")
         .upload(filePath, arrayBuffer, {
           contentType,
-          upsert: true,
+          upsert: false,
         });
 
       if (error) {
-        console.log(error);
+        console.error(error);
         Alert.alert("Erro", "Não foi possível enviar a imagem.");
         return;
       }
 
-      // 6) URL pública (bucket precisa ser public)
       const { data } = supabase.storage.from("images").getPublicUrl(filePath);
       setPublicUrl(data.publicUrl);
-
       Alert.alert("Sucesso", "Imagem enviada!");
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       Alert.alert("Erro", "Algo deu errado no upload.");
     } finally {
       setUploading(false);
@@ -118,7 +152,9 @@ export default function UploadImage() {
   }
 
   async function pickFromGallery() {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permission =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (!permission.granted) {
       Alert.alert("Permissão necessária", "Permita acesso à galeria.");
       return;
@@ -140,6 +176,7 @@ export default function UploadImage() {
 
   async function takePhoto() {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
+
     if (!permission.granted) {
       Alert.alert("Permissão necessária", "Permita acesso à câmera.");
       return;
@@ -189,7 +226,7 @@ export default function UploadImage() {
             {publicUrl}
           </Text>
 
-          <Text style={styles.label}>Imagem na nuvem:</Text>
+          <Text style={styles.label}>Imagem armazenada:</Text>
           <Image source={{ uri: publicUrl }} style={styles.image} />
         </>
       )}
@@ -198,20 +235,40 @@ export default function UploadImage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, gap: 12 },
-  title: { fontSize: 20, fontWeight: "700" },
-  buttons: { gap: 10 },
-  label: { marginTop: 8, fontWeight: "600" },
+  container: {
+    flex: 1,
+    padding: 20,
+    gap: 12,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+  },
+  buttons: {
+    gap: 10,
+  },
+  label: {
+    marginTop: 8,
+    fontWeight: "600",
+  },
   image: {
     width: "100%",
     height: 220,
     borderRadius: 10,
     backgroundColor: "#eee",
   },
-  url: { fontSize: 12 },
+  url: {
+    fontSize: 12,
+  },
 });
 ```
 
-### Conclusão
+## Observações importantes
 
-Com Expo, você consegue implementar upload de imagens de forma bem direta: **(1) escolher da galeria ou tirar foto**, **(2) pegar o `uri`**, **(3) fazer upload para o Storage do Supabase** e **(4) exibir a imagem pela URL**. Esse padrão já resolve a maior parte dos apps iniciais e é fácil de evoluir depois (bucket privado, URL assinada, salvar caminho no banco, etc.).
+* `EXPO_PUBLIC_` não deve guardar segredos privados.
+* Em apps reais, muitas vezes você vai salvar no banco o caminho do arquivo ou a URL retornada.
+* Buckets privados exigem outro fluxo, como URL assinada.
+
+## Conclusão
+
+Esse fluxo já resolve a maior parte dos cenários iniciais de upload em aplicativos React Native. Ele conecta recurso do dispositivo, manipulação de arquivo e armazenamento em nuvem de um jeito bem próximo do uso real.

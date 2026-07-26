@@ -1,38 +1,80 @@
 ---
 description: >-
-  Antes de mergulharmos no desenvolvimento com React Native, é fundamental
-  estabelecer uma base sólida em Javascript, nessa matéria vamos utilizar o
-  "vanilla js".
+  Antes de entrar no React Native, vamos preparar a base de JavaScript e o
+  ambiente que será usado ao longo do curso.
 ---
 
 # Dando início ao desenvolvimento
 
 <figure><img src="../.gitbook/assets/React Native (1).png" alt=""><figcaption></figcaption></figure>
 
-### Vanilla JS
+Antes de escrever telas, consumir APIs e usar recursos do celular, precisamos alinhar a base do curso. Vamos trabalhar com:
 
-É Javascript puro mesmo. Em inglês existe essa expressão "vanilla \[something]" para se referir à variante mais comum, mais simples ou mais pura de algo - talvez porque "baunilha" seja o sabor mais básico de quitutes como biscoitos, sorvete, etc.
+* **JavaScript vanilla** para aprender lógica, sintaxe e organização do código;
+* **Node.js** para usar ferramentas de desenvolvimento;
+* **Expo** para criar e rodar nossos aplicativos React Native.
 
-Talvez a forma apresentada para parecer como um framework seja proposital como forma de piada, já que há crítica sobre a proliferação de frameworks que em geral pouco agregam de fato.
+## JavaScript vanilla
 
-Javascript é uma linguagem de programação interpretada. Foi originalmente implementada como parte dos navegadores web para que scripts pudessem ser executados do lado do cliente e interagissem com o usuário sem a necessidade deste script passar pelo servidor, controlando o navegador, realizando comunicação assíncrona e alterando o conteúdo do documento exibido.
+Quando dizemos **vanilla JavaScript**, estamos falando do JavaScript puro, sem frameworks e sem abstrações extras em volta da linguagem.
 
-É atualmente a principal linguagem para programação client-side em navegadores web. É também bastante utilizada do lado do servidor através de ambientes como o node.js.
+Isso é importante por dois motivos:
 
-### Node JS
+1. você entende a linguagem de verdade;
+2. quando chegar no React Native, o foco fica em aprender interface e arquitetura mobile, e não em “adivinhar” o que uma ferramenta faz por trás.
 
-Node.js é uma plataforma baseada em Javascript que permite executar código Javascript no servidor. É uma parte importante da stack de desenvolvimento moderna e é útil para construir back-ends para aplicações web e móveis. Seu objetivo é ajudar programadores na criação de aplicações de alta escalabilidade (como um servidor web), com códigos capazes de manipular dezenas de milhares de conexões simultâneas, numa única máquina física.
+No começo do curso, essa escolha é intencional: aprender primeiro os fundamentos melhora muito a leitura e a manutenção dos projetos depois.
 
-### Preparando o ambiente
+## O papel do Node.js
 
-Para nossas aulas, vamos utilizar o Node JS para a execução de códigos Javascript fora de navegadores. Para fazer a instalação, acesse o link abaixo e instale a versão LTS (versão recomentada pelos desenvolvedores).
+O **Node.js** permite executar JavaScript fora do navegador. No nosso contexto, ele é importante porque várias ferramentas do ecossistema dependem dele, como:
 
-Link oficial: [https://nodejs.org/](https://nodejs.org/)
+* `npm`;
+* `npx`;
+* `create-expo-app`;
+* `expo`;
+* `eas`.
 
-Feito a instalação, para verificar se tudo está funcionando, abra um terminal e digite:
+Mesmo que o aplicativo rode no celular, grande parte do processo de desenvolvimento começa no terminal.
 
-```
+## Preparando o ambiente
+
+Para acompanhar as aulas com tranquilidade, instale:
+
+1. **Node.js LTS**
+2. **Visual Studio Code**
+3. **Git** (recomendado para versionamento)
+4. **Expo Go** no celular, quando estivermos testando pelo app
+
+Site oficial do Node.js: [https://nodejs.org/](https://nodejs.org/)
+
+Depois da instalação, abra o terminal e confira:
+
+```bash
 node -v
+npm -v
 ```
 
-Deve aparecer a versão do node instalada. Se apareceu, está tudo certo e podemos partir para o código!
+Se os dois comandos mostrarem uma versão, o ambiente básico está pronto.
+
+## O que vem depois
+
+Nesta primeira fase, vamos usar JavaScript puro para consolidar:
+
+* tipos básicos;
+* estruturas de decisão;
+* laços de repetição;
+* funções;
+* arrays e objetos;
+* assincronismo.
+
+Essa base será reaproveitada o tempo todo no React Native, porque um aplicativo é, no fundo, uma combinação de:
+
+* lógica em JavaScript;
+* componentes React;
+* recursos mobile;
+* comunicação com APIs e serviços.
+
+## Conclusão
+
+O objetivo desta etapa não é “desviar” do desenvolvimento mobile, e sim criar uma fundação sólida para ele. Quando chegarmos nas telas, hooks, navegação e integração com backend, você vai perceber que quase tudo depende de uma boa leitura de JavaScript.

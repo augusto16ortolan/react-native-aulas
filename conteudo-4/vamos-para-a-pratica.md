@@ -1,28 +1,30 @@
 ---
 description: >-
-  Nesta seção, vamos começar de fato o desenvolvimento de aplicativos móveis com
-  React Native.
+  Nesta seção, vamos conhecer a estrutura inicial de um projeto Expo em
+  JavaScript e modificar o primeiro app.
 ---
 
 # Vamos para a prática?
 
 <figure><img src="../.gitbook/assets/165238eb-4601-4aae-b8ad-6dc322811aca_text.gif" alt=""><figcaption></figcaption></figure>
 
-Bom, com o nosso ambiente configurado e entendido como criamos um projeto, podemos começar de fato a programar nossos apps.
+Com o projeto criado e rodando, o próximo passo é entender o arquivo inicial do aplicativo.
 
-Para isso, é sempre aconselhável entendermos bem as as funcionalidades dos frameworks que estamos usando. Então, podemos usar a documentação oficial do React Native e do Expo:
+## Documentações importantes
+
+Durante o curso, estas duas documentações serão referências frequentes:
 
 {% embed url="https://reactnative.dev/docs/components-and-apis" %}
 
 {% embed url="https://docs.expo.dev/" %}
 
-### Explicando o código
+## Um exemplo inicial de `App.js`
 
-Quando criamos um novo aplicativo, ao executarmos o mesmo, somos levados a uma tela com a seguinte mensagem “Open up App.js to start working on your app!”. Isso indica que para começarmos o desenvolvimento. É necessário então abrir o código presente no arquivo App.js e começar o trabalho. Abaixo uma imagem do código presente no arquivo:
+Um projeto Expo em JavaScript costuma começar com uma estrutura parecida com esta:
 
 ```jsx
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function App() {
   return (
@@ -36,27 +38,30 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 ```
 
-Nas linhas 1 e 2, são realizadas as importações das bibliotecas necessárias, tanto do React como do React Native.
+## O que esse código faz
+
+### Importações
 
 ```javascript
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 ```
 
-Entre as linhas 4 e 10 é apresentado um código padrão de uma função exportada que retorna JSX. JSX é uma extensão de sintaxe para JavaScript. Recomendamos usar JSX com o React para descrever como a UI deveria parecer. JSX pode lembrar uma linguagem de template, mas que vem com todo o poder do JavaScript. JSX produz “elementos” do React.
+Aqui estamos trazendo:
 
-O componente `View` é como uma "caixa" ou "contêiner" que pode conter outros elementos. Ele é usado para agrupar e organizar outros componentes.
+* `StatusBar`: controla a aparência da barra de status;
+* `View`: funciona como um contêiner;
+* `Text`: mostra texto na tela;
+* `StyleSheet`: organiza os estilos.
 
-O componente `Text` é usado para exibir texto na tela.
-
-O componente `StatusBar` controla a barra de status na parte superior do dispositivo (onde aparecem informações como a hora, bateria, etc.).
+### Componente principal
 
 ```jsx
 export default function App() {
@@ -69,36 +74,81 @@ export default function App() {
 }
 ```
 
-Entre as linhas 14 e 21 é criado uma folha de estilo personalizada para uso nesta classe. Como ambas estão no mesmo arquivo, não é necessário importar nada além do modelo que ela se refere, que é uma StyleSheet. Importante destacar que não é CSS, mesmo parecendo muito, a sintaxe é bastante diferente.
+Esse componente é a primeira tela do app. Tudo o que renderizarmos aqui será exibido quando o aplicativo abrir.
+
+### Estilos
 
 ```jsx
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 ```
 
-Caso quisermos alterar a cor de fundo do nosso aplicativo, podemos simplesmente alterar o valor do campo backgroudColor para o que desejarmos, como por exemplo para vermelho. Então devemos fazer a seguinte modificação.
+Esses estilos deixam o conteúdo centralizado na tela.
+
+## Primeira modificação prática
+
+Vamos trocar o texto inicial e personalizar um pouco a interface:
 
 ```jsx
-backgroundColor: 'red',
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Projeto de Desenvolvimento de Aplicativos</Text>
+      <Text style={styles.subtitle}>Primeiro app com React Native e Expo</Text>
+      <StatusBar style="light" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#1f3c88",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  title: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "700",
+    textAlign: "center",
+    marginBottom: 12,
+  },
+  subtitle: {
+    color: "#dbe4ff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+});
 ```
 
-Para cores simples, podemos simplesmente digitar o nome delas em inglês, mas tabém podemos colocar o código RGB delas com o prefixo "#". O nosso app ficará assim:
+## O que mudamos
 
-<figure><img src="../.gitbook/assets/Screenshot_20240726143456.jpg" alt="" width="148"><figcaption></figcaption></figure>
+* alteramos a cor de fundo;
+* estilizamos o texto;
+* adicionamos uma segunda linha de informação;
+* ajustamos a barra de status para combinar com o fundo.
 
-Para alterarmos o texto que estamos colocando em tela, simplesmente altere o valor que está dentro da tag Text.
+## Leitura importante sobre estilos
 
-```jsx
-<Text>Augusto Kruger Ortolan</Text>
-<Text>augusto.ortolan@atitus.edu.br</Text>
-```
+No React Native, o estilo lembra CSS em vários pontos, mas não é CSS puro. Algumas propriedades são parecidas, outras mudam, e a forma de declarar tudo é em objetos JavaScript.
 
-<figure><img src="../.gitbook/assets/Screenshot_20240726143706.jpg" alt="" width="148"><figcaption></figcaption></figure>
+Isso significa que:
 
-Pronto, agora sabemos alguns componentes básicos do React Native. Além desses, temos muitos mais, explore as documentações e aplique em seus aplicativos.
+* nomes como `backgroundColor` e `fontSize` usam `camelCase`;
+* os valores são escritos dentro de objetos;
+* os estilos ficam muito próximos da lógica do componente.
+
+## Conclusão
+
+Esse primeiro contato com o `App.js` já mostra a ideia central do React Native: criar interfaces a partir de componentes e estilos em JavaScript. A partir daqui, vamos expandir esse mesmo princípio para inputs, listas, navegação e integração com dados.

@@ -1,51 +1,82 @@
 ---
 description: >-
-  Aprenda a implementar e gerenciar a navegação entre diferentes telas e seções
-  do seu aplicativo, garantindo uma experiência de usuário fluida e intuitiva.
+  Aprenda a implementar navegação entre telas com React Navigation em projetos
+  React Native com Expo.
 ---
 
 # Navegação dentro do aplicativo
 
 <figure><img src="../.gitbook/assets/image (45).png" alt=""><figcaption></figcaption></figure>
 
-Navegação é uma parte crucial de qualquer aplicativo móvel. Em React Native, o **React Navigation** é a biblioteca mais popular para gerenciar a navegação entre diferentes telas do aplicativo. Com ela, você pode criar uma navegação fluida usando diferentes tipos de navegação: Stack, Tabs e Drawer.
+Poucos aplicativos funcionam com uma tela só. Em algum momento, o usuário precisa:
 
-Vamos explorar cada tipo de navegação e aprender como passar dados de uma tela para outra.
+* abrir detalhes de um item;
+* voltar para a página anterior;
+* trocar de seção;
+* acessar configurações;
+* navegar por menus.
 
-### Instalando o React Navigation
+Para isso, vamos usar **React Navigation**, que continua sendo a principal biblioteca de navegação no ecossistema React Native.
 
-Antes de começar, você precisa instalar o React Navigation e suas dependências. Primeiro vamos fazer a instalação apenas da Stack Navigation. No terminal, execute:
+## Instalando o React Navigation
 
-```javascript
+Em um projeto Expo, a instalação base começa assim:
+
+```bash
 npm install @react-navigation/native
 npx expo install react-native-screens react-native-safe-area-context
-npm install @react-navigation/stack
-npx expo install react-native-gesture-handler @react-native-masked-view/masked-view
 ```
 
-Lembrando que podemos seguir a documentação do React Navigation através desse link: [https://reactnavigation.org/docs/getting-started/](https://reactnavigation.org/docs/getting-started/)
+Depois, instalamos o navegador que queremos usar.
 
-### Navegação com Stack ([https://reactnavigation.org/docs/stack-navigator/](https://reactnavigation.org/docs/stack-navigator/))
+### Navegação em pilha com Native Stack
 
-A navegação em pilha (Stack Navigation) é como uma pilha de cartas. Quando você navega para uma nova tela, ela é empilhada sobre a tela anterior. Você pode voltar para a tela anterior puxando a carta de volta para baixo.
+Para stack navigation, a escolha mais recomendada hoje é:
 
-#### Exemplo de Stack Navigation
+```bash
+npm install @react-navigation/native-stack
+```
 
-Crie uma tela de navegação (HomeScreen.js e DetailsScreen.js):
+### Navegação por abas
 
-HomeScreen.js
+```bash
+npm install @react-navigation/bottom-tabs
+```
+
+### Navegação com drawer
+
+```bash
+npm install @react-navigation/drawer
+npx expo install react-native-gesture-handler react-native-reanimated
+```
+
+Sempre confirme dependências extras na documentação oficial do React Navigation:
+
+[https://reactnavigation.org/docs/getting-started/](https://reactnavigation.org/docs/getting-started/)
+
+## Navegação com stack
+
+A navegação em pilha funciona como um histórico de telas: você entra em uma nova tela e pode voltar para a anterior.
+
+### Exemplo de telas
+
+`HomeScreen.js`
 
 ```jsx
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from "react-native";
 
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <Text style={styles.title}>Tela Inicial</Text>
       <Button
-        title="Ir para Detalhes"
-        onPress={() => navigation.navigate('Details', { itemId: 42 })}
+        title="Ir para detalhes"
+        onPress={() =>
+          navigation.navigate("Details", {
+            itemId: 42,
+            title: "Produto Exemplo",
+          })
+        }
       />
     </View>
   );
@@ -54,25 +85,32 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 12,
   },
 });
 ```
 
-DetailScreen.js
+`DetailsScreen.js`
 
 ```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from "react-native";
 
-export default function DetailsScreen({ route }) {
-  const { itemId } = route.params;
+export default function DetailsScreen({ route, navigation }) {
+  const { itemId, title } = route.params;
 
   return (
     <View style={styles.container}>
-      <Text>Detalhes da Tela</Text>
-      <Text>ID do Item: {itemId}</Text>
+      <Text style={styles.title}>Tela de Detalhes</Text>
+      <Text>ID: {itemId}</Text>
+      <Text>Título: {title}</Text>
+      <Button title="Voltar" onPress={() => navigation.goBack()} />
     </View>
   );
 }
@@ -80,23 +118,29 @@ export default function DetailsScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    gap: 12,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
   },
 });
-
 ```
 
-Configure o Stack Navigator no App.js.
+### Configurando o stack navigator
+
+`App.js`
 
 ```jsx
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './HomeScreen';
-import DetailsScreen from './DetailsScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./HomeScreen";
+import DetailsScreen from "./DetailsScreen";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
@@ -110,68 +154,30 @@ export default function App() {
 }
 ```
 
-### Navegação com Tabs ([https://reactnavigation.org/docs/tab-based-navigation/](https://reactnavigation.org/docs/tab-based-navigation/))
+## Navegação com tabs
 
-A navegação por abas (Tab Navigation) permite alternar entre diferentes telas usando abas na parte inferior da tela.
-
-#### Exemplo de Tab Navigation
-
-Crie telas de navegação (FeedScreen.js e ProfileScreen.js).
-
-FeedScreen.js
+Tabs servem para alternar entre seções principais do aplicativo.
 
 ```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { View, Text } from "react-native";
 
-export default function FeedScreen() {
+function FeedScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Feed Screen</Text>
+    <View>
+      <Text>Feed</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-ProfileScreen.js
-
-```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function ProfileScreen() {
+function ProfileScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Profile Screen</Text>
+    <View>
+      <Text>Perfil</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-Configure o Tab Navigator no App.js.
-
-```jsx
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FeedScreen from './FeedScreen';
-import ProfileScreen from './ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -180,127 +186,79 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Feed" component={FeedScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Perfil" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
 ```
 
-### Navegação com Drawer ([https://reactnavigation.org/docs/drawer-based-navigation](https://reactnavigation.org/docs/drawer-based-navigation))
+## Navegação com drawer
 
-A navegação por gaveta (Drawer Navigation) permite que você deslize a partir da borda da tela para revelar um menu lateral com opções de navegação.
-
-#### Exemplo de Drawer Navigation
-
-Crie telas de navegação (HomeScreen.js, NotificationsScreen.js e SettingsScreen.js):
-
-NotificationsScreen.js
+Drawer é útil quando o app precisa de um menu lateral com várias áreas.
 
 ```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { View, Text } from "react-native";
 
-export default function NotificationsScreen() {
+function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Notifications Screen</Text>
+    <View>
+      <Text>Home</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-SettingsScreen.js
-
-```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function SettingsScreen() {
+function SettingsScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Settings Screen</Text>
+    <View>
+      <Text>Configurações</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-Configure o Drawer Navigator no App.js:
-
-```jsx
-import * as React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './HomeScreen';
-import NotificationsScreen from './NotificationsScreen';
-import SettingsScreen from './SettingsScreen';
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Navigator>
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} />
+        <Drawer.Screen name="Configurações" component={SettingsScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
 }
 ```
 
-### Passando dados de uma tela para outra
+## Passando dados entre telas
 
-É comum precisar passar dados de uma tela para outra em um aplicativo. Veja como fazer isso com Stack Navigation.
+Uma das ações mais comuns em aplicativos é abrir uma tela de detalhes com informações da tela anterior.
 
-#### Passar dados com navigation.navigate
-
-Você pode passar dados para a próxima tela usando a função `navigation.navigate`. No exemplo abaixo, passamos um `itemId` para a tela de detalhes.
+### Enviando dados
 
 ```jsx
-// HomeScreen.js
-<Button
-  title="Ir para Detalhes"
-  onPress={() => navigation.navigate('Details', { itemId: 42 })}
-/>
+navigation.navigate("Details", {
+  itemId: 42,
+  title: "Produto Exemplo",
+});
 ```
 
-#### Receber dados com route.params
-
-Na tela de destino, você pode acessar os dados passados através da propriedade `route.params`.
+### Recebendo dados
 
 ```jsx
-// DetailsScreen.js
-export default function DetailsScreen({ route }) {
-  const { itemId } = route.params;
-
-  return (
-    <View style={styles.container}>
-      <Text>ID do Item: {itemId}</Text>
-    </View>
-  );
-}
+const { itemId, title } = route.params;
 ```
 
-### Conclusão
+## Boas práticas para o curso
 
-A navegação é essencial para a experiência do usuário em aplicativos móveis. Com o React Navigation, você pode facilmente configurar diferentes tipos de navegação, como Stack, Tabs e Drawer. Cada tipo de navegação tem seus próprios usos e vantagens, e você pode escolher o que melhor se adapta às necessidades do seu aplicativo.
+Ao estruturar projetos com navegação, tente separar assim:
 
-Passar dados entre telas também é uma tarefa comum e simples, utilizando as funcionalidades do React Navigation. Experimentar com diferentes tipos de navegação e como passar dados pode ajudar a criar uma navegação fluida e intuitiva em seu aplicativo.
+* `screens/` para telas;
+* `components/` para componentes reutilizáveis;
+* `navigation/` para a configuração dos navegadores, se o projeto crescer.
+
+## Conclusão
+
+React Navigation continua sendo a escolha certa para o curso. O ponto principal não é decorar todos os navegadores, e sim entender a lógica: abrir telas, voltar, trocar de seção e passar dados entre rotas de forma clara.

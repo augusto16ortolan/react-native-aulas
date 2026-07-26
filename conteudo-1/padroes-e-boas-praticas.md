@@ -1,112 +1,159 @@
 ---
 description: >-
-  Seguir boas práticas de nomenclatura e estilo ajuda a criar um código mais
-  limpo e compreensível. Isso não só facilita a manutenção e a colaboração, mas
-  também melhora a eficiência do desenvolvimento.
+  Seguir boas práticas de nomenclatura e organização ajuda a escrever código
+  mais limpo, previsível e fácil de manter.
 ---
 
 # Padrões e boas práticas
 
 <figure><img src="../.gitbook/assets/React Native (3).png" alt=""><figcaption></figcaption></figure>
 
-## Nomenclaturas
+Quando um projeto cresce, a maior dificuldade raramente é “fazer funcionar”. O desafio real passa a ser **entender, manter e evoluir** o código. Por isso, padrões de nomenclatura e pequenas boas práticas fazem tanta diferença.
 
-As convenções de nomenclatura são importantes para manter o código legível e consistente. Em Javascript, existem várias convenções que ajudam a distinguir diferentes tipos de identificadores, como variáveis, funções, classes e constantes.
+## Convenções de nomenclatura
 
-### **Camel Case**
+### `camelCase`
 
-A primeira palavra começa com letra minúscula e cada palavra subsequente começa com letra maiúscula. É a convenção mais comum para variáveis e funções.
+É o padrão mais comum para:
 
-```javascript
-nomeCompleto = "Jhon Snow";
-dataNascimento = "01/01/1990";
-quantidadeVenda = 10;
-```
-
-### **Pascal Case**
-
-Todas as palavras começam com letra maiúscula, incluindo a primeira. É frequentemente usada para classes e construtores.
+* variáveis;
+* funções;
+* propriedades;
+* hooks personalizados.
 
 ```javascript
-NomeCompleto = "Jhon Snow";
-DataNascimento = "01/01/1990";
-QuantidadeVenda = 10;
+const nomeCompleto = "John Snow";
+const dataNascimento = "1990-01-01";
+
+function calcularTotal() {
+  return 100;
+}
 ```
 
-### **Snake Case**
+### `PascalCase`
 
-Todas as letras são minúsculas e as palavras são separadas por underscores (`_`). É menos comum em Javascript, mas ainda pode ser visto em algumas bases de código.
+É o padrão ideal para:
+
+* componentes React;
+* classes;
+* arquivos de componentes.
 
 ```javascript
-nome_completo = "Jhon Snow";
-data_nascimento = "01/01/1990";
-quantidade_venda = 10;
+function UserCard() {
+  return null;
+}
+
+function ProductList() {
+  return null;
+}
 ```
 
-### **Upper Snake Case**
+### `snake_case`
 
-Uma variação da snake case onde todas as letras são maiúsculas. É frequentemente usada para constantes que têm valores fixos.
+É menos comum em JavaScript, mas pode aparecer:
+
+* em nomes vindos de APIs;
+* em bancos de dados;
+* em integrações com back-end.
 
 ```javascript
-NOME_COMPLETO = "Jhon Snow";
-DATA_NASCIMENTO = "01/01/1990";
-QUANTIDADE_VENDA = 10;
+const usuario_api = {
+  first_name: "Ana",
+  last_name: "Souza",
+};
 ```
 
-### **Recomendações em JavaScript**
+### `UPPER_SNAKE_CASE`
 
-* **Camel Case**: Usado para variáveis e funções. Exemplo: `nomeCompleto`, `calcularImposto()`.
-* **Pascal Case**: Usado para classes e construtores. Exemplo: `Pessoa`, `Produto`.
-* **Snake Case**: Menos comum em JavaScript, mas pode ser usado em contextos específicos ou para manter compatibilidade com outras linguagens ou padrões.
-* **Upper Snake Case**: Usado para constantes que não devem ser alteradas. Exemplo: `MAX_TEMPERATURA`.
-
-## Boas práticas
-
-Adotar boas práticas ao escrever código JavaScript ajuda a garantir que o código seja claro, legível e fácil de manter. Aqui estão algumas diretrizes importantes:
-
-### Nomes significativos e descritivos
-
-Utilize nomes que claramente reflitam o propósito e o uso das variáveis, funções e outros identificadores.
-
-#### Bom exemplo:
+É usada para valores constantes e fixos.
 
 ```javascript
-let totalDeVendas = 100;
-let usuarioAtual = "Jhon Snow";
+const API_URL = "https://api.exemplo.com";
+const MAX_RETRIES = 3;
 ```
 
-#### Mau exemplo:
+## Recomendações para este curso
+
+Ao longo do material, vamos seguir este padrão:
+
+* **variáveis e funções**: `camelCase`
+* **componentes React Native**: `PascalCase`
+* **constantes fixas**: `UPPER_SNAKE_CASE`
+* **arquivos de componentes**: `PascalCase` ou nomes claros e consistentes com a estrutura do projeto
+
+## Boas práticas importantes
+
+### Use nomes significativos
 
 ```javascript
-let x = 100;
-let nm = "Jhon Snow";
+const totalDeVendas = 100;
+const usuarioAtual = "John Snow";
 ```
 
-### Consistência
-
-Mantenha uma convenção de nomenclatura e estilo de código consistente em todo o projeto. Isso melhora a legibilidade e facilita a colaboração em equipe.\
-Escolha uma convenção (como camelCase para variáveis e funções, PascalCase para classes) e a siga rigorosamente.
-
-### Evite abreviações
-
-Abreviações podem ser confusas e dificultar a compreensão do código. Use nomes completos a menos que a abreviação seja amplamente compreendida.
-
-#### Bom exemplo:
+Evite:
 
 ```javascript
-let quantidadeDeProdutos = 50;
+const x = 100;
+const u = "John Snow";
 ```
 
-#### Mau exemplo:
+### Prefira `const` por padrão
+
+Se o valor não precisa mudar, use `const`.
 
 ```javascript
-let qtProd = 50;
+const nomeProjeto = "Tarefas App";
+let contador = 0;
 ```
 
-### Defina um idioma
+Isso reduz efeitos colaterais e deixa a intenção mais clara.
 
-Use um idioma consistente ao longo do código. Isso é especialmente importante em equipes internacionais para evitar confusões.
+### Evite abreviações desnecessárias
+
+```javascript
+const quantidadeDeProdutos = 50;
+```
+
+Evite:
+
+```javascript
+const qtdProd = 50;
+```
+
+### Mantenha um idioma consistente
+
+Escolha um idioma para nomes de variáveis e funções e siga esse padrão no projeto inteiro.
+
+Se a turma preferir português, tudo bem. O importante é não misturar sem motivo:
+
+```javascript
+const usuarioLogado = true;
+const userName = "Ana";
+```
+
+Esse tipo de mistura dificulta a leitura.
+
+### Separe responsabilidade
+
+Mesmo em exemplos pequenos, tente evitar arquivos “gigantes” com tudo junto. Em apps React Native, é comum separar:
+
+* componentes;
+* telas;
+* serviços;
+* contextos;
+* utilitários.
+
+### Escreva pensando em quem vai ler depois
+
+Esse “alguém” pode ser:
+
+* você daqui a duas semanas;
+* um colega;
+* um avaliador;
+* um futuro time de manutenção.
+
+Código limpo não é código “bonito”. É código que outra pessoa consegue entender sem sofrimento.
 
 ## Conclusão
 
-Ao adotar nomes significativos e descritivos, manter consistência em todo o projeto e evitar abreviações confusas, você não apenas melhora a legibilidade do código, mas também facilita a colaboração e a manutenção a longo prazo. Seguir esses princípios não apenas reforça a qualidade do código, mas também promove uma cultura de excelência e profissionalismo entre desenvolvedores. Lembre-se, boas práticas na programação são a base para criar soluções robustas e de alta qualidade que podem evoluir e prosperar no futuro.
+Boas práticas não servem para deixar o código “mais formal”. Elas servem para diminuir erros, acelerar manutenção e tornar o projeto sustentável. Em aplicativos, isso pesa ainda mais, porque a lógica cresce rápido e envolve interface, navegação, estado e integração com serviços externos.

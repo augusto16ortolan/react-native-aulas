@@ -1,50 +1,76 @@
 ---
 description: >-
-  Aprenda os fundamentos essenciais de CRUD e como implementar essas operações
-  em suas aplicações, permitindo a manipulação eficiente de dados.
+  Aprenda os fundamentos de CRUD e como essas operações aparecem no dia a dia
+  de aplicativos móveis.
 ---
 
 # Desvendando o CRUD
 
 <figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
-### O que é CRUD?
+CRUD é o conjunto das quatro operações mais comuns em sistemas que manipulam dados:
 
-CRUD é um acrônimo que representa as quatro operações básicas utilizadas na maioria dos sistemas que trabalham com armazenamento e gerenciamento de dados. Essas operações são fundamentais para manipular qualquer tipo de informação em um sistema, seja ele um aplicativo, um site ou um software mais complexo.
+1. **Create**: criar
+2. **Read**: ler
+3. **Update**: atualizar
+4. **Delete**: excluir
 
-As operações CRUD são:
+Quase todo aplicativo com dados faz isso o tempo todo.
 
-1. **Create (Criar)**: Refere-se ao processo de adicionar novos dados ao sistema. Por exemplo, cadastrar um novo usuário, adicionar uma nova tarefa a uma lista ou inserir um novo produto em um catálogo.
-2. **Read (Ler)**: Consiste em recuperar e visualizar dados que já estão armazenados. Por exemplo, listar todas as tarefas, mostrar os detalhes de um usuário ou exibir os produtos disponíveis.
-3. **Update (Atualizar)**: É a operação de modificar ou editar dados existentes. Por exemplo, atualizar o nome de um usuário, alterar o status de uma tarefa ou ajustar o preço de um produto.
-4. **Delete (Excluir)**: Envolve a remoção de dados do sistema. Por exemplo, deletar um usuário, remover uma tarefa ou excluir um produto do catálogo.
+## CRUD no contexto de um app
 
-### Importância de CRUD em aplicativos
+Imagine um aplicativo de tarefas:
 
-Em praticamente todos os aplicativos que lidam com dados, você encontrará funcionalidades CRUD. Seja um aplicativo de redes sociais (publicar, editar e excluir postagens), um sistema de gerenciamento de inventário (adicionar, editar e remover produtos) ou uma plataforma de streaming (adicionar novos conteúdos, visualizar e atualizar informações de vídeos). Essas operações são essenciais para garantir que os usuários possam interagir com os dados da forma desejada.
+* criar uma nova tarefa;
+* listar as tarefas já cadastradas;
+* editar o título ou marcar como concluída;
+* remover uma tarefa que não faz mais sentido.
 
-### Como o CRUD funciona em um aplicativo mobile
+Isso é CRUD.
 
-Imagine um aplicativo de lista de tarefas que permite ao usuário:
+## Onde o CRUD acontece
 
-* **Adicionar novas tarefas** (Create)
-* **Visualizar a lista de tarefas e detalhes de cada uma** (Read)
-* **Editar uma tarefa, como alterar o título ou marcar como concluída** (Update)
-* **Excluir uma tarefa que não é mais necessária** (Delete)
+No mobile, essas operações podem acontecer de duas formas:
 
-Essas operações CRUD são executadas tanto localmente no dispositivo do usuário (usando armazenamento local, como AsyncStorage) quanto remotamente em servidores (via APIs RESTful).
+* **localmente**: com armazenamento no dispositivo, como `@react-native-async-storage/async-storage`;
+* **remotamente**: via API ou serviço como Supabase.
 
-### CRUD em APIs RESTful
+Na prática, a maioria dos apps reais mistura os dois cenários em algum nível.
 
-Quando falamos de React Native, normalmente as operações CRUD são realizadas através de requisições HTTP para APIs. Cada operação é mapeada para um método HTTP específico:
+## CRUD e métodos HTTP
 
-* **Create**: `POST` - Usado para criar novos recursos no servidor.
-* **Read**: `GET` - Usado para recuperar dados do servidor.
-* **Update**: `PUT` ou `PATCH` - Usado para atualizar recursos existentes.
-* **Delete**: `DELETE` - Usado para remover recursos do servidor.
+Quando o app conversa com um backend, o CRUD costuma aparecer assim:
 
-Entender o CRUD é essencial para desenvolver aplicativos que sejam dinâmicos e interativos, permitindo que os usuários façam alterações nos dados de maneira eficaz e intuitiva.
+* **Create** → `POST`
+* **Read** → `GET`
+* **Update** → `PUT` ou `PATCH`
+* **Delete** → `DELETE`
 
-### Conclusão
+## Exemplo mental simples
 
-O conceito de CRUD é um dos pilares do desenvolvimento de software, pois define as operações básicas para manipular dados. Aprender a implementar essas operações em React Native com Expo ajuda a construir aplicativos que possam crescer em funcionalidades e oferecer uma experiência completa aos usuários. Em resumo, sempre que você ouvir "CRUD", lembre-se das ações de Criar, Ler, Atualizar e Excluir.
+Se o usuário cadastrar uma nova tarefa:
+
+* a tela envia um `POST`;
+* o servidor salva;
+* o app atualiza a lista exibida.
+
+Se o usuário excluir:
+
+* a tela envia um `DELETE`;
+* o servidor remove;
+* a interface deixa de mostrar aquele item.
+
+## Por que CRUD é tão importante?
+
+Porque ele organiza o pensamento do projeto. Quando você olha para uma funcionalidade e pergunta:
+
+* o que precisa ser criado?
+* o que precisa ser listado?
+* o que o usuário poderá editar?
+* o que poderá ser removido?
+
+você já está estruturando uma parte importante do aplicativo.
+
+## Conclusão
+
+CRUD é um dos pilares do desenvolvimento de software e aparece naturalmente em projetos React Native. Entender essas quatro operações deixa muito mais claro como construir telas, integrar APIs e organizar o fluxo de dados do aplicativo.

@@ -2,141 +2,150 @@
 
 <figure><img src="../.gitbook/assets/165238eb-4601-4aae-b8ad-6dc322811aca_text.gif" alt=""><figcaption></figcaption></figure>
 
-Nesta prática, vamos aprender a usar o `Stack.Navigator` para gerenciar a navegação entre diferentes telas de um aplicativo React Native. Vamos construir um exemplo básico onde temos duas telas e podemos navegar de uma para a outra.
+Nesta prática, vamos montar uma navegação simples usando **React Navigation** com **Native Stack**, que é uma ótima opção para começar.
 
-### Configuração do Navegador de Pilha (Stack Navigator)
+## Estrutura sugerida
 
-Agora vamos configurar o Stack Navigator.
+```text
+src/
+  screens/
+    HomeScreen.js
+    DetailsScreen.js
+App.js
+```
 
-#### Criação das telas
+## Criando as telas
 
-Vamos criar duas telas simples. No diretório `screens`, crie dois arquivos: `HomeScreen.js` e `DetailsScreen.js`.
+### `src/screens/HomeScreen.js`
 
 ```jsx
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from "react-native";
 
-const HomeScreen = ({ navigation }) => {
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela Inicial</Text>
+      <Text style={styles.title}>Tela Inicial</Text>
       <Button
-        title="Ir para Detalhes"
-        onPress={() => navigation.navigate('Details')}
+        title="Ver detalhes do curso"
+        onPress={() =>
+          navigation.navigate("Details", {
+            course: "React Native",
+            module: "Navegação",
+          })
+        }
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
-  text: {
+  title: {
     fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 16,
   },
 });
-
-export default HomeScreen;
 ```
 
-```jsx
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+### `src/screens/DetailsScreen.js`
 
-const DetailsScreen = ({ navigation }) => {
+```jsx
+import { View, Text, Button, StyleSheet } from "react-native";
+
+export default function DetailsScreen({ navigation, route }) {
+  const { course, module } = route.params;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela de Detalhes</Text>
-      <Button
-        title="Voltar para Home"
-        onPress={() => navigation.goBack()}
-      />
+      <Text style={styles.title}>Tela de Detalhes</Text>
+      <Text>Curso: {course}</Text>
+      <Text>Módulo: {module}</Text>
+      <Button title="Voltar para Home" onPress={() => navigation.goBack()} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    gap: 12,
   },
-  text: {
+  title: {
     fontSize: 24,
+    fontWeight: "700",
   },
 });
-
-export default DetailsScreen;
 ```
 
-No arquivo App.js, temos o seguinte conteúdo:
+## Configurando o navegador
+
+### `App.js`
 
 ```jsx
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './screens/HomeScreen';
-import DetailsScreen from './screens/DetailsScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./src/screens/HomeScreen";
+import DetailsScreen from "./src/screens/DetailsScreen";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
-const App = () => {
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Início" }}
+        />
+        <Stack.Screen
+          name="Details"
+          component={DetailsScreen}
+          options={{ title: "Detalhes" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-export default App;
+}
 ```
 
-Aqui está o que cada parte do código faz:
+## O que cada parte faz
 
-**a) NavigationContainer**
+### `NavigationContainer`
 
-**O que é?** O `NavigationContainer` é um componente de nível superior que deve envolver toda a árvore de navegação do seu aplicativo. Ele fornece o contexto de navegação necessário para que o React Navigation funcione corretamente.
+É o componente que envolve toda a árvore de navegação e permite que o React Navigation controle o estado das rotas.
 
-**Por que é necessário?** O `NavigationContainer` gerencia o estado da navegação e o histórico de navegação. Sem ele, o React Navigation não terá um contexto para trabalhar, e a navegação entre telas não funcionará.
+### `createNativeStackNavigator`
 
-**Onde você usa?** Você deve envolver o seu `Stack.Navigator` (ou qualquer outro tipo de navegador) com o `NavigationContainer`. Normalmente, isso é feito no componente raiz do seu aplicativo.
+Cria o navegador de pilha usando componentes nativos, o que tende a oferecer uma experiência visual melhor e mais próxima do sistema operacional.
 
+### `Stack.Navigator`
 
+Define o conjunto de telas que fazem parte da pilha de navegação.
 
-**b) createStackNavigator**
+### `Stack.Screen`
 
-**O que é?** A função `createStackNavigator` cria um objeto que contém a lógica e os componentes necessários para implementar a navegação em pilha (stack navigation). Em outras palavras, ele cria um "navegador de pilha" que gerencia a navegação entre telas de forma empilhada.
+Representa cada tela disponível nessa pilha.
 
-**Por que é necessário?** O `createStackNavigator` é necessário para configurar e criar um "navegador de pilha" que gerencia a transição entre diferentes telas (ou rotas) dentro do seu aplicativo. Ele permite que você defina quais telas estarão disponíveis na pilha e como elas serão exibidas.
+## O que praticar depois
 
-**Onde você usa?** Você usa `createStackNavigator` para criar uma instância do Stack Navigator e depois usa essa instância para definir as telas do seu aplicativo.
+Quando esse exemplo estiver funcionando, experimente:
 
+1. mudar os títulos das telas;
+2. adicionar mais parâmetros no `navigate`;
+3. criar uma terceira tela;
+4. definir uma tela inicial diferente;
+5. personalizar o cabeçalho com `options`.
 
+## Conclusão
 
-**c) Stack.Navigator**
-
-**O que é?** O `Stack.Navigator` é um componente que atua como um container para as telas que você deseja exibir. Ele define a pilha de navegação e controla como as telas são empilhadas e desenroladas.
-
-**Por que é necessário?** O `Stack.Navigator` gerencia a navegação entre as telas dentro de uma pilha. Ele determina qual tela está no topo da pilha e lida com as transições entre as telas quando você navega para frente ou para trás.
-
-**Onde você usa?** Você usa o `Stack.Navigator` para definir quais telas estão na pilha e configurar opções de navegação, como cabeçalhos, animações e outras configurações.
-
-
-
-**d) Stack.Screen**
-
-**O que é?** O `Stack.Screen` é um componente filho do `Stack.Navigator` que define uma tela individual na pilha de navegação. Cada `Stack.Screen` representa uma tela específica do seu aplicativo.
-
-**Por que é necessário?** Cada `Stack.Screen` diz ao Stack Navigator quais componentes (telas) devem ser exibidos em cada parte da pilha de navegação. Você define o nome da tela e o componente que deve ser exibido quando essa tela estiver ativa.
-
-**Onde você usa?** Você usa o `Stack.Screen` dentro do `Stack.Navigator` para definir todas as telas disponíveis na navegação.
-
-
-
-Com esses conceitos claros, você pode configurar a navegação entre telas em seu aplicativo React Native usando o React Navigation. Se precisar de mais detalhes ou de exemplos avançados, é só me avisar!
+Com esse exemplo, você já monta a base de navegação de muitos aplicativos. A partir daqui, o próximo passo é combinar navegação com listas, formulários, autenticação e consumo de APIs.
